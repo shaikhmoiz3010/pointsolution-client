@@ -30,16 +30,11 @@ adminApi.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Log request in development
-    if (import.meta.env.DEV) {
-      console.log(`👑 ADMIN ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
-    }
-    
+    console.log(`👑 ADMIN ${config.method.toUpperCase()} ${config.url}`);
     return config;
   },
   (error) => {
-    console.error('❌ Admin API request error:', error);
+    console.error('Admin API request error:', error);
     return Promise.reject(error);
   }
 );
@@ -47,52 +42,24 @@ adminApi.interceptors.request.use(
 // Response interceptor
 adminApi.interceptors.response.use(
   (response) => {
-    // Log response in development
-    if (import.meta.env.DEV) {
-      console.log(`✅ Admin Response ${response.status}:`, response.config.url);
-    }
+    console.log(`✅ Admin Response ${response.status}: ${response.config.url}`);
     return response.data;
   },
   (error) => {
-    const errorMessage = error.response?.data?.message || error.message;
+    console.error('❌ Admin API Error:', error.response?.data || error.message);
     
-    // Log error details
-    console.error('❌ Admin API Error:', {
-      url: error.config?.url,
-      status: error.response?.status,
-      message: errorMessage,
-      data: error.response?.data
-    });
-    
-    // Handle specific error cases
     if (error.response?.status === 401) {
-      console.log('🛡️ 401 Unauthorized - Token invalid or expired');
+      console.log('Unauthorized - Redirecting to login');
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      
-      // Only redirect if not already on login page
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
-      }
+      window.location.href = '/login';
     } else if (error.response?.status === 403) {
-      console.log('🚫 403 Forbidden - Not an admin');
-      // Redirect non-admin users to dashboard
-      if (!window.location.pathname.includes('/dashboard')) {
-        window.location.href = '/dashboard';
-      }
-      throw new Error('You do not have admin privileges');
+      console.log('Forbidden - Not an admin');
+      window.location.href = '/dashboard';
     }
     
-    // Handle network errors
-    if (error.code === 'ECONNABORTED' || !error.response) {
-      console.error('🌐 Network error - Server might be down');
-      throw new Error('Unable to connect to server. Please check your internet connection.');
-    }
-    
-    // Return the error response data if available
     return Promise.reject(error.response?.data || { 
       success: false, 
-      message: errorMessage || 'Network error' 
+      message: error.message || 'Network error' 
     });
   }
 );
@@ -100,7 +67,8 @@ adminApi.interceptors.response.use(
 // Admin Dashboard Stats
 export const getAdminStats = () => adminApi.get('/stats');
 
-// Get all bookings
+// Get all bookings - THIS IS THE KEY FIX
+// The URL should be '/bookings' not '/api/bookings' because baseURL already includes '/api/admin'
 export const getAllBookings = (params = {}) => 
   adminApi.get('/bookings', { params });
 
@@ -108,12 +76,32 @@ export const getAllBookings = (params = {}) =>
 export const getRecentBookings = () => 
   adminApi.get('/bookings/recent');
 
-// Get single booking - ADMIN VERSION
+// client/src/utils/adminApi.js
+// Add this function
+
+// Verify document
+export const verifyDocument = async (documentId, status, rejectionReason = '') => {
+  try {
+    console.log(`🔍 Verifying document ${documentId} with status: ${status}`);
+    
+    const response = await adminApi.put(`/documents/${documentId}/verify`, {
+      status,
+      rejectionReason
+    });
+    
+    console.log('✅ Document verification response:', response);
+    return response;
+  } catch (error) {
+    console.error('❌ Document verification error:', error);
+    throw error;
+  }
+};
+
+// Get single booking
 export const getBookingDetails = async (id) => {
   try {
     console.log('🔍 Admin fetching booking ID:', id);
     
-    // Validate ID
     if (!id || id === 'undefined' || id === 'null') {
       throw new Error('Invalid booking ID');
     }
@@ -123,24 +111,6 @@ export const getBookingDetails = async (id) => {
     return response;
   } catch (error) {
     console.error('❌ Admin getBookingDetails error:', error);
-    
-    // Try alternative endpoint if main one fails
-    if (error.response?.status === 404) {
-      try {
-        console.log('🔄 Trying alternative endpoint...');
-        // Try to get all bookings and find the specific one
-        const allBookings = await getAllBookings();
-        if (allBookings.success && allBookings.bookings) {
-          const foundBooking = allBookings.bookings.find(b => b._id === id || b.bookingId === id);
-          if (foundBooking) {
-            return { success: true, booking: foundBooking };
-          }
-        }
-      } catch (fallbackError) {
-        console.error('❌ Fallback also failed:', fallbackError);
-      }
-    }
-    
     throw error;
   }
 };
@@ -176,16 +146,3 @@ export const deleteUser = (id) =>
 // Get service analytics
 export const getServiceAnalytics = () => 
   adminApi.get('/analytics/services');
-
-// Utility function to check admin permissions
-export const checkAdminAccess = async () => {
-  try {
-    const response = await adminApi.get('/check-access');
-    return { success: true, ...response };
-  } catch (error) {
-    return { 
-      success: false, 
-      message: error.message || 'Not authorized as admin'
-    };
-  }
-};

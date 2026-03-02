@@ -156,24 +156,6 @@ const ServiceCategory = () => {
         </div>
 
         {/* Category Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-gray-900 mb-1">{services.length}</div>
-            <div className="text-sm text-gray-600">Available Services</div>
-          </div>
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-gray-900 mb-1">24/7</div>
-            <div className="text-sm text-gray-600">Support Available</div>
-          </div>
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-gray-900 mb-1">99%</div>
-            <div className="text-sm text-gray-600">Success Rate</div>
-          </div>
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-4 text-center">
-            <div className="text-2xl font-bold text-gray-900 mb-1">5+</div>
-            <div className="text-sm text-gray-600">Years Experience</div>
-          </div>
-        </div>
 
         {/* Services Grid */}
         {services.length === 0 ? (
@@ -215,82 +197,6 @@ const ServiceCategory = () => {
           </>
         )}
 
-        {/* Category Information Section */}
-        <div className="mt-16">
-          <div className="bg-white border-2 border-gray-200 rounded-xl p-8">
-            <div className="grid lg:grid-cols-2 gap-8">
-              {/* Category Details */}
-              <div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                  About {categoryName} Services
-                </h3>
-                <div className="text-gray-600 space-y-4">
-                  <p>
-                    Our {categoryName.toLowerCase()} services are designed to simplify complex government procedures and documentation requirements.
-                    We provide end-to-end assistance, ensuring accuracy and compliance at every step.
-                  </p>
-                  <p>
-                    With years of experience and a team of dedicated professionals, we make the entire process seamless,
-                    transparent, and hassle-free for our clients.
-                  </p>
-                </div>
-
-                {/* Key Benefits */}
-                <div className="mt-8">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-4">Key Benefits</h4>
-                  <div className="space-y-3">
-                    <div className="flex items-start gap-3">
-                      <Shield className="w-5 h-5 text-green-600 mt-0.5" />
-                      <span className="text-gray-600">100% legitimate & government-approved procedures</span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Clock className="w-5 h-5 text-green-600 mt-0.5" />
-                      <span className="text-gray-600">Fast processing with regular updates</span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <Users className="w-5 h-5 text-green-600 mt-0.5" />
-                      <span className="text-gray-600">Expert guidance throughout the process</span>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                      <span className="text-gray-600">Transparent pricing with no hidden charges</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Common Requirements */}
-              <div>
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Common Requirements</h4>
-                <div className="bg-gray-50 rounded-lg p-6">
-                  <ul className="space-y-3">
-                    {[
-                      'Aadhaar Card (original & copy)',
-                      'PAN Card (original & copy)',
-                      'Address Proof (utility bill/rent agreement)',
-                      'Passport-sized photographs',
-                      'Age Proof (birth certificate/10th marksheet)',
-                      'Previous related documents (if any)',
-                      'Other category-specific documents'
-                    ].map((req, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-600">{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <div className="mt-6 pt-6 border-t border-gray-200">
-                    <p className="text-sm text-gray-500">
-                      *Required documents may vary based on specific service requirements.
-                      Our team will guide you through exact documentation needs.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* CTA Section */}
         <div className="mt-16 text-center">

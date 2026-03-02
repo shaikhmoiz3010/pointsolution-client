@@ -14,123 +14,121 @@ const BookingTracking = ({ booking }) => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'text-yellow-600 bg-yellow-100';
-      case 'processing': return 'text-blue-600 bg-blue-100';
-      case 'completed': return 'text-green-600 bg-green-100';
-      case 'cancelled': return 'text-red-600 bg-red-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'pending': return 'text-amber-700 bg-amber-100 border-amber-200';
+      case 'processing': return 'text-blue-700 bg-blue-100 border-blue-200';
+      case 'completed': return 'text-emerald-700 bg-emerald-100 border-emerald-200';
+      case 'cancelled': return 'text-rose-700 bg-rose-100 border-rose-200';
+      default: return 'text-gray-700 bg-gray-100 border-gray-200';
+    }
+  };
+
+  const getTimelineDotColor = (status, index) => {
+    if (index === 0) return 'bg-blue-500 ring-4 ring-blue-100';
+    switch (status) {
+      case 'completed': return 'bg-emerald-500';
+      case 'cancelled': return 'bg-rose-500';
+      case 'processing': return 'bg-blue-500 animate-pulse';
+      default: return 'bg-gray-300';
     }
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
-      <h3 className="text-xl font-bold text-gray-800 mb-6">Booking Tracking</h3>
-      
-      {/* Current Status */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h4 className="font-semibold text-gray-700">Current Status</h4>
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}>
-            {getStatusIcon(booking.status)} {booking.status.toUpperCase()}
-          </span>
-        </div>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <p className="text-gray-600">
-            {booking.tracking && booking.tracking.length > 0
-              ? booking.tracking[booking.tracking.length - 1]?.message
-              : 'Booking created successfully'}
-          </p>
-        </div>
-      </div>
-
-      {/* Timeline */}
-      {booking.tracking && booking.tracking.length > 0 && (
-        <div>
-          <h4 className="font-semibold text-gray-700 mb-4">Timeline</h4>
-          <div className="space-y-4">
-            {booking.tracking.map((track, index) => (
-              <div key={index} className="flex">
-                <div className="flex flex-col items-center mr-4">
-                  <div className={`w-3 h-3 rounded-full ${
-                    index === 0 ? 'bg-blue-600' : 
-                    track.status === 'completed' ? 'bg-green-500' :
-                    track.status === 'cancelled' ? 'bg-red-500' : 'bg-gray-300'
-                  }`}></div>
-                  {index < booking.tracking.length - 1 && (
-                    <div className="w-px h-full bg-gray-300 mt-1"></div>
-                  )}
-                </div>
-                <div className="flex-1 pb-4">
-                  <div className="flex justify-between items-start mb-1">
-                    <span className="font-medium text-gray-800 capitalize">{track.status}</span>
-                    <span className="text-sm text-gray-500">
-                      {new Date(track.timestamp || track.date).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-sm">{track.message}</p>
-                  {track.updatedBy && (
-                    <p className="text-gray-500 text-xs mt-1">By: {track.updatedBy}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Payment Status */}
-      <div className="mt-8 pt-6 border-t border-gray-200">
-        <h4 className="font-semibold text-gray-700 mb-3">Payment Information</h4>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="text-sm text-gray-600">Payment Status</label>
-            <div className={`px-3 py-1 rounded-full text-sm font-medium inline-block ${
-              booking.paymentStatus === 'paid' ? 'bg-green-100 text-green-600' :
-              booking.paymentStatus === 'pending' ? 'bg-yellow-100 text-yellow-600' :
-              'bg-red-100 text-red-600'
-            }`}>
-              {booking.paymentStatus.toUpperCase()}
-            </div>
-          </div>
-          <div>
-            <label className="text-sm text-gray-600">Payment Method</label>
-            <p className="font-medium capitalize">{booking.paymentMethod?.replace('_', ' ') || 'Not specified'}</p>
-          </div>
-          <div>
-            <label className="text-sm text-gray-600">Amount</label>
-            <p className="font-medium">₹{booking.serviceFee}</p>
-          </div>
-          {booking.paymentDate && (
-            <div>
-              <label className="text-sm text-gray-600">Payment Date</label>
-              <p className="font-medium">{new Date(booking.paymentDate).toLocaleDateString()}</p>
-            </div>
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-4 sm:px-6 py-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <span>📦</span> Booking Tracking
+          </h3>
+          {booking.createdAt && (
+            <span className="text-white/80 text-sm bg-white/20 px-3 py-1 rounded-full w-fit">
+              {new Date(booking.createdAt).toLocaleDateString()}
+            </span>
           )}
         </div>
       </div>
 
-      {/* Help Section */}
-      <div className="mt-8 pt-6 border-t border-gray-200">
-        <h4 className="font-semibold text-gray-700 mb-3">Need Help?</h4>
-        <div className="bg-blue-50 p-4 rounded-lg">
-          <p className="text-sm text-blue-700 mb-2">
-            For updates or assistance with your booking:
-          </p>
-          <div className="text-sm space-y-1">
-            <div className="flex items-center">
-              <span className="w-4 mr-2">📞</span>
-              <span>Call: +91 98765 43210</span>
-            </div>
-            <div className="flex items-center">
-              <span className="w-4 mr-2">✉️</span>
-              <span>Email: support@1point1solution.com</span>
-            </div>
-            <div className="flex items-center">
-              <span className="w-4 mr-2">📋</span>
-              <span>Reference: {booking.bookingId}</span>
-            </div>
+      <div className="p-4 sm:p-6">
+        {/* Current Status */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+            <h4 className="font-semibold text-gray-700">Current Status</h4>
+            <span className={`px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(booking.status)} w-fit`}>
+              {getStatusIcon(booking.status)} {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+            </span>
+          </div>
+          <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border border-gray-200">
+            <p className="text-gray-700">
+              {booking.tracking && booking.tracking.length > 0
+                ? booking.tracking[booking.tracking.length - 1]?.message
+                : 'Booking created successfully'}
+            </p>
           </div>
         </div>
+
+        {/* Timeline */}
+        {booking.tracking && booking.tracking.length > 0 && (
+          <div>
+            <h4 className="font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <span className="w-1 h-5 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+              Timeline
+            </h4>
+            <div className="space-y-4">
+              {booking.tracking.map((track, index) => (
+                <div key={index} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                  {/* Timeline dot and line - hidden on mobile, shown on sm and up */}
+                  <div className="hidden sm:flex sm:flex-col sm:items-center">
+                    <div className={`w-3 h-3 rounded-full ${getTimelineDotColor(track.status, index)}`}></div>
+                    {index < booking.tracking.length - 1 && (
+                      <div className="w-0.5 h-full bg-gradient-to-b from-gray-300 to-gray-200 mt-1"></div>
+                    )}
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="flex-1 bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md transition-shadow">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`inline-block w-2 h-2 rounded-full sm:hidden ${
+                          index === 0 ? 'bg-blue-500' : 
+                          track.status === 'completed' ? 'bg-emerald-500' :
+                          track.status === 'cancelled' ? 'bg-rose-500' : 'bg-gray-400'
+                        }`}></span>
+                        <span className="font-medium text-gray-800 capitalize flex items-center gap-1">
+                          {getStatusIcon(track.status)} {track.status}
+                        </span>
+                        {index === 0 && (
+                          <span className="text-xs bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">
+                            Latest
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-sm text-gray-500 ml-4 sm:ml-0">
+                        {new Date(track.timestamp || track.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    
+                    <p className="text-gray-600 text-sm sm:text-base">{track.message}</p>
+                    
+                    {track.updatedBy && (
+                      <p className="text-gray-400 text-xs mt-2 flex items-center gap-1">
+                        <span>👤</span> By: {track.updatedBy}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {(!booking.tracking || booking.tracking.length === 0) && (
+          <div className="text-center py-8 bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl border border-gray-200">
+            <div className="text-4xl mb-3">📋</div>
+            <p className="text-gray-600">No tracking updates available</p>
+            <p className="text-sm text-gray-500 mt-1">Check back later for updates</p>
+          </div>
+        )}
       </div>
     </div>
   );

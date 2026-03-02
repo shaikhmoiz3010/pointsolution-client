@@ -132,11 +132,11 @@ const Register = () => {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="bg-gray-800 text-white px-4 py-3 rounded-xl">
-              <span className="font-bold text-2xl">1P1S</span>
+            
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">1Point 1Solution</h1>
-              <p className="text-sm text-gray-600">Your Documentation Partner</p>
+              <h1 className="text-2xl font-bold text-gray-900"></h1>
+
             </div>
           </div>
           <div className="inline-block mb-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm">
@@ -286,26 +286,7 @@ const Register = () => {
               />
             </div>
 
-            {/* Terms */}
-            <div className="flex items-start gap-3">
-              <input
-                id="terms"
-                name="terms"
-                type="checkbox"
-                required
-                className="h-5 w-5 border-2 border-gray-300 rounded mt-0.5 focus:ring-0 focus:border-gray-800"
-              />
-              <label htmlFor="terms" className="text-sm text-gray-600">
-                I agree to the{' '}
-                <Link to="/terms" className="text-gray-800 hover:text-gray-900 font-medium underline">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link to="/privacy" className="text-gray-800 hover:text-gray-900 font-medium underline">
-                  Privacy Policy
-                </Link>
-              </label>
-            </div>
+
 
             {/* Submit Button */}
             <button

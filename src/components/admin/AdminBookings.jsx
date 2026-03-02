@@ -17,7 +17,8 @@ import {
     Trash2,
     AlertCircle,
     ChevronLeft,
-    ChevronRight
+    ChevronRight,
+    FileText
 } from 'lucide-react';
 import {
     getAllBookings,
@@ -405,7 +406,6 @@ const AdminBookings = () => {
                                 <th className="px-6 py-3">Booking Details</th>
                                 <th className="px-6 py-3">Customer</th>
                                 <th className="px-6 py-3">Service</th>
-                                <th className="px-6 py-3">Amount</th>
                                 <th className="px-6 py-3">Status</th>
                                 <th className="px-6 py-3">Date</th>
                                 <th className="px-6 py-3">Actions</th>
@@ -462,14 +462,7 @@ const AdminBookings = () => {
                                             {booking.category?.replace('-', ' ') || 'General'}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <div className="text-lg font-bold text-gray-900">
-                                            ₹{booking.serviceFee}
-                                        </div>
-                                        <div className="text-xs text-gray-500 capitalize">
-                                            {booking.paymentMethod?.replace('_', ' ') || 'Not specified'}
-                                        </div>
-                                    </td>
+
                                     <td className="px-6 py-4">
                                         {getStatusBadge(booking.status)}
                                     </td>
@@ -485,17 +478,19 @@ const AdminBookings = () => {
                                         <div className="flex items-center gap-2">
                                             <Link
                                                 to={`/admin/bookings/${booking._id}`}
-                                                onClick={(e) => {
-                                                    console.log('🔗 Navigating to booking:', {
-                                                        id: booking._id,
-                                                        bookingId: booking.bookingId,
-                                                        path: `/admin/bookings/${booking._id}`
-                                                    });
-                                                }}
                                                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                                                 title="View Details"
                                             >
                                                 <Eye className="w-4 h-4" />
+                                            </Link>
+
+                                            {/* Add this new button for documents */}
+                                            <Link
+                                                to={`/admin/bookings/${booking._id}/documents`}
+                                                className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+                                                title="Manage Documents"
+                                            >
+                                                <FileText className="w-4 h-4" />
                                             </Link>
 
                                             <button
@@ -505,7 +500,6 @@ const AdminBookings = () => {
                                             >
                                                 <Edit className="w-4 h-4" />
                                             </button>
-
                                             {/* Status Update Dropdown */}
                                             <div className="relative group">
                                                 <button
@@ -593,8 +587,8 @@ const AdminBookings = () => {
                                             key={pageNum}
                                             onClick={() => handlePageChange(pageNum)}
                                             className={`w-8 h-8 rounded-md text-sm ${currentPage === pageNum
-                                                    ? 'bg-blue-600 text-white'
-                                                    : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                                                ? 'bg-blue-600 text-white'
+                                                : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
                                                 }`}
                                         >
                                             {pageNum}

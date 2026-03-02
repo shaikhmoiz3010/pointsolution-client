@@ -59,14 +59,7 @@ const AdminDashboard = () => {
       color: 'bg-green-500',
       link: '/admin/users'
     },
-    {
-      title: 'Total Revenue',
-      value: `₹${stats?.totalRevenue?.toLocaleString() || 0}`,
-      change: stats?.revenueChange || 0,
-      icon: DollarSign,
-      color: 'bg-purple-500',
-      link: '/admin/analytics'
-    },
+
     {
       title: 'Pending Actions',
       value: stats?.pendingBookings || 0,
@@ -174,7 +167,6 @@ const AdminDashboard = () => {
                 <th className="px-6 py-3">Booking ID</th>
                 <th className="px-6 py-3">Service</th>
                 <th className="px-6 py-3">Customer</th>
-                <th className="px-6 py-3">Amount</th>
                 <th className="px-6 py-3">Status</th>
                 <th className="px-6 py-3">Date</th>
                 <th className="px-6 py-3">Actions</th>
@@ -195,9 +187,6 @@ const AdminDashboard = () => {
                       {booking.userDetails?.fullName || 'N/A'}
                     </div>
                     <div className="text-xs text-gray-500">{booking.userDetails?.email}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-bold text-gray-900">₹{booking.serviceFee}</div>
                   </td>
                   <td className="px-6 py-4">
                     {getStatusBadge(booking.status)}
@@ -259,29 +248,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 lg:col-span-2">
-          <h4 className="font-semibold text-gray-900 mb-4">Recent Activity</h4>
-          <div className="space-y-4">
-            {stats?.recentActivity?.slice(0, 5).map((activity, index) => (
-              <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className={`p-2 rounded-lg ${
-                  activity.type === 'booking' ? 'bg-blue-100 text-blue-600' :
-                  activity.type === 'payment' ? 'bg-green-100 text-green-600' :
-                  'bg-purple-100 text-purple-600'
-                }`}>
-                  {activity.type === 'booking' ? <FileText className="w-4 h-4" /> :
-                   activity.type === 'payment' ? <DollarSign className="w-4 h-4" /> :
-                   <Users className="w-4 h-4" />}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-900">{activity.message}</p>
-                  <p className="text-xs text-gray-500">{activity.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+
       </div>
     </div>
   );

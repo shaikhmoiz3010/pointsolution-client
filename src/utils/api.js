@@ -29,111 +29,136 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
-    // Log request in development
-    if (import.meta.env.DEV) {
-      console.log(`🚀 ${config.method?.toUpperCase()} ${config.baseURL}${config.url}`);
-    }
-    
+    console.log(`🚀 ${config.method.toUpperCase()} ${config.url}`);
     return config;
   },
-  (error) => {
-    console.error('❌ Request error:', error);
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle errors
+// Response interceptor to handle responses
 api.interceptors.response.use(
   (response) => {
-    // Log response in development
-    if (import.meta.env.DEV) {
-      console.log(`✅ Response ${response.status}:`, response.config.url);
-    }
-    return response.data;
+    console.log(`✅ Response ${response.status}: ${response.config.url}`);
+    return response;
   },
   (error) => {
-    const errorMessage = error.response?.data?.message || error.message;
-    
-    // Log error details
-    console.error('❌ API Error:', {
-      url: error.config?.url,
-      status: error.response?.status,
-      message: errorMessage,
-      data: error.response?.data
-    });
-    
-    // Handle specific error cases
+    console.error(`❌ Error ${error.response?.status}: ${error.config?.url}`, error.response?.data);
     if (error.response?.status === 401) {
       console.log('🛡️ 401 Unauthorized - Token invalid');
-      // Clear token and redirect to login
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      
-      // Only redirect if not already on login page
-      if (!window.location.pathname.includes('/login')) {
-        window.location.href = '/login';
-      }
+      window.location.href = '/login';
     }
-    
-    // Handle network errors
-    if (error.code === 'ECONNABORTED' || !error.response) {
-      console.error('🌐 Network error - Server might be down');
-      throw new Error('Unable to connect to server. Please check your internet connection.');
-    }
-    
-    // Re-throw the error with a user-friendly message
-    throw new Error(errorMessage || 'Something went wrong. Please try again.');
+    return Promise.reject(error);
   }
 );
 
 // Auth APIs
 export const loginUser = (email, password) => 
-  api.post('/auth/login', { email, password });
+  api.post('/auth/login', { email, password }).then(res => res.data);
 
 export const registerUser = (userData) => 
-  api.post('/auth/register', userData);
+  api.post('/auth/register', userData).then(res => res.data);
 
 export const getCurrentUser = () => 
-  api.get('/auth/me');
+  api.get('/auth/me').then(res => res.data);
 
 export const updateUserProfile = (profileData) => 
-  api.put('/auth/update-profile', profileData);
+  api.put('/auth/update-profile', profileData).then(res => res.data);
 
 export const updateProfile = (profileData) => 
-  api.put('/auth/update-profile', profileData);
+  api.put('/auth/update-profile', profileData).then(res => res.data);
+
+
 
 // Services APIs
-export const getAllServices = () => 
-  api.get('/services');
+export const getAllServices = async (params = {}) => {
+  try {
+    const response = await api.get('/services', { params });
+    return response.data;
+  } catch (error) {
+    console.error('getAllServices error:', error);
+    return { 
+      success: false, 
+      message: error.response?.data?.message || 'Failed to fetch services',
+      services: {},
+      allServices: []
+    };
+  }
+};
 
-export const getServiceById = (id) => 
-  api.get(`/services/id/${id}`);
+export const getServiceById = async (id) => {
+  try {
+    const response = await api.get(`/services/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('getServiceById error:', error);
+    return { 
+      success: false, 
+      message: error.response?.data?.message || 'Failed to fetch service',
+      service: null
+    };
+  }
+};
 
-export const getServicesByCategory = (category) => 
-  api.get(`/services/category/${category}`);
+export const getServicesByCategory = async (category) => {
+  try {
+    const response = await api.get(`/services/category/${category}`);
+    return response.data;
+  } catch (error) {
+    console.error('getServicesByCategory error:', error);
+    return { 
+      success: false, 
+      message: error.response?.data?.message || 'Failed to fetch services',
+      services: []
+    };
+  }
+};
 
-export const getServiceDetails = (category, serviceId) => 
-  api.get(`/services/${category}/${serviceId}`);
+export const getCategories = async () => {
+  try {
+    const response = await api.get('/services/categories');
+    return response.data;
+  } catch (error) {
+    console.error('getCategories error:', error);
+    return { 
+      success: false, 
+      message: error.response?.data?.message || 'Failed to fetch categories',
+      categories: []
+    };
+  }
+};
 
-export const getCategories = () => 
-  api.get('/services/categories');
+// ADD THIS MISSING FUNCTION
+export const getPopularServices = async () => {
+  try {
+    const response = await api.get('/services/popular');
+    return response.data;
+  } catch (error) {
+    console.error('getPopularServices error:', error);
+    return { 
+      success: false, 
+      message: error.response?.data?.message || 'Failed to fetch popular services',
+      services: []
+    };
+  }
+};
+
 
 // Bookings APIs
 export const createBooking = (bookingData) => 
-  api.post('/bookings', bookingData);
+  api.post('/bookings', bookingData).then(res => res.data);
 
 export const getUserBookings = () => 
-  api.get('/bookings/my-bookings');
+  api.get('/bookings/my-bookings').then(res => res.data);
 
 export const getBookingDetails = (id) => 
-  api.get(`/bookings/${id}`);
+  api.get(`/bookings/${id}`).then(res => res.data);
 
 export const cancelBooking = (id) => 
-  api.put(`/bookings/${id}/cancel`);
+  api.put(`/bookings/${id}/cancel`).then(res => res.data);
 
 export const getBookingStats = () => 
-  api.get('/bookings/stats');
+  api.get('/bookings/stats').then(res => res.data);
 
 // Payments APIs
 export const getPaymentMethods = () => 

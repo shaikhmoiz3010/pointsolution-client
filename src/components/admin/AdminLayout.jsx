@@ -26,14 +26,14 @@ const AdminLayout = () => {
         navigate('/login');
     };
 
-    const navItems = [
-        { path: '/admin', icon: Home, label: 'Dashboard', exact: true },
-        { path: '/admin/bookings', icon: FileText, label: 'Bookings' },
-        { path: '/admin/users', icon: Users, label: 'Users' },
-        { path: '/services', icon: Settings, label: 'Services' },
-        { path: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
-        { path: '/', icon: Home, label: 'Home', exact: true },
-    ];
+const navItems = [
+  { path: '/admin', icon: Home, label: 'Dashboard', exact: true },
+  { path: '/admin/bookings', icon: FileText, label: 'Bookings' },
+  // Add this line for documents
+  { path: '/admin/documents', icon: FileText, label: 'Documents' },
+  { path: '/admin/users', icon: Users, label: 'Users' },
+  { path: '/', icon: Home, label: 'Home', exact: true },
+];
 
     const isActive = (path, exact = false) => {
         if (exact) {

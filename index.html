@@ -2,10 +2,53 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- <link rel="icon" type="image/svg+xml" href="/vite.svg" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>1Point 1Solution</title>
-    </head>
+    <title>1 Point1 Solution | Gurgaon's Leading Document Service Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+  /* Zoom-In/Out Effect on Icons */
+  .service-card:hover .service-icon {
+    transform: scale(1.25);
+    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  .service-icon { 
+    transition: transform 0.5s ease; 
+  }
+
+  /* Hero Slider Transitions */
+  .hero-slide {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  .hero-slide.active {
+    opacity: 1;
+  }
+  @keyframes zoomEffect {
+    from { transform: scale(1); }
+    to { transform: scale(1.1); }
+  }
+
+  /* Text Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+  .animate-fade-in-up {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  /* Smooth scroll */
+  html {
+    scroll-behavior: smooth;
+  }
+</style>
+  </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

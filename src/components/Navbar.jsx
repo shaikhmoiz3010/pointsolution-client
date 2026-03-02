@@ -13,8 +13,8 @@ const Navbar = () => {
   // Hide navbar on admin routes
   if (location.pathname.startsWith('/admin')) {
     return null;
-  }  
-  
+  }
+
 
   const handleLogout = () => {
     logout();
@@ -24,23 +24,6 @@ const Navbar = () => {
   return (
     <header className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
       {/* Top Bar */}
-      <div className="bg-gray-700 text-white py-2">
-        <div className="container mx-auto px-4 flex justify-between items-center text-sm">
-          <div className="flex items-center gap-4">
-            <a href="tel:+911234567890" className="flex items-center gap-2 hover:text-gray-100">
-              <Phone className="w-4 h-4" />
-              <span className="hidden sm:inline">+91 123 456 7890</span>
-            </a>
-            <a href="mailto:info@1point1solution.com" className="flex items-center gap-2 hover:text-gray-100">
-              <Mail className="w-4 h-4" />
-              <span className="hidden sm:inline">info@1point1solution.com</span>
-            </a>
-          </div>
-          <div className="hidden md:block">
-            <span>Trusted Government Documentation Services</span>
-          </div>
-        </div>
-      </div>
 
       {/* Main Navigation */}
       <div className="container mx-auto px-4 py-4">
@@ -51,45 +34,40 @@ const Navbar = () => {
               <span className="font-bold text-xl">1P1S</span>
             </div> */}
             <div>
-              <Link to="/" className="text-xl font-bold text-gray-900 hover:text-gray-700">
-                1Point 1Solution
+              <Link to="/" className="text-3xl font-extrabold text-blue-800 tracking-tighter">
+                1<span className="text-orange-600">P</span>1<span className="text-blue-600">S</span>
+                <span className="text-sm font-light text-gray-500 block">1 POINT1 SOLUTION</span>
               </Link>
-              <p className="text-xs text-gray-600">Your Documentation Partner</p>
             </div>
           </div>
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link 
-              to="/" 
-              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+            <Link
+              to="/"
+              className="text-blue-800 hover:text-gray-900 transition-colors font-medium"
             >
               Home
             </Link>
-            <Link 
-              to="/services" 
-              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+            <Link
+              to="/services"
+              className="text-orange-600 hover:text-gray-900 transition-colors font-medium"
             >
               Services
             </Link>
-            <Link 
-              to="/about" 
-              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
-            >
-              About Us
-            </Link>
-            <Link 
-              to="/contact" 
-              className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+
+            <Link
+              to="/contact"
+              className="text-blue-800 hover:text-gray-900 transition-colors font-medium"
             >
               Contact
             </Link>
-            
+
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
-                <Link 
-                  to="/dashboard" 
-                  className="text-gray-700 hover:text-gray-900 transition-colors font-medium"
+                <Link
+                  to="/dashboard"
+                  className="text-blue-800 hover:text-gray-900 transition-colors font-medium"
                 >
                   Dashboard
                 </Link>
@@ -109,14 +87,14 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center gap-4">
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="px-4 py-2 text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors font-medium"
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition-colors font-medium"
                 >
                   Get Started
@@ -137,39 +115,32 @@ const Navbar = () => {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 flex flex-col gap-3">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-gray-700 hover:text-gray-900 transition-colors py-2 text-left font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
-            <Link 
-              to="/services" 
+            <Link
+              to="/services"
               className="text-gray-700 hover:text-gray-900 transition-colors py-2 text-left font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Services
             </Link>
-            <Link 
-              to="/about" 
-              className="text-gray-700 hover:text-gray-900 transition-colors py-2 text-left font-medium"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              About Us
-            </Link>
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className="text-gray-700 hover:text-gray-900 transition-colors py-2 text-left font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact
             </Link>
-            
+
             {isAuthenticated ? (
               <>
-                <Link 
-                  to="/dashboard" 
+                <Link
+                  to="/dashboard"
                   className="text-gray-700 hover:text-gray-900 transition-colors py-2 text-left font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -197,15 +168,15 @@ const Navbar = () => {
               </>
             ) : (
               <div className="pt-4 space-y-3">
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="block px-4 py-2 text-blue-600 border border-blue-600 rounded-lg text-center hover:bg-blue-50 transition-colors font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
-                <Link 
-                  to="/register" 
+                <Link
+                  to="/register"
                   className="block px-4 py-2 bg-gray-800 text-white rounded-lg text-center hover:bg-gray-900 transition-colors font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >

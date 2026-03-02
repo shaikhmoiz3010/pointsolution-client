@@ -103,7 +103,7 @@ const ServiceCard = ({ service }) => {
       <div className="flex items-start gap-4">
         {/* Icon Container */}
         <div className="flex-shrink-0">
-          <div className="bg-gray-100 p-3 rounded-lg group-hover:bg-gray-700 transition-colors duration-300">
+          <div className="bg-gray-100 p-3 rounded-lg group-hover:bg-orange-500 transition-colors duration-300">
             <Icon className="w-6 h-6 text-gray-700 group-hover:text-white" />
           </div>
         </div>
@@ -118,12 +118,12 @@ const ServiceCard = ({ service }) => {
           )}
 
           {/* Service Title */}
-          <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-gray-800">
+          <h3 className="text-xl font-bold text-blue-500 mb-2 group-hover:text-blue-800">
             {service.name}
           </h3>
 
           {/* Service Description */}
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+          <p className="text-black text-sm mb-4 line-clamp-2">
             {service.description || 'Professional documentation service with expert assistance.'}
           </p>
 
@@ -137,25 +137,13 @@ const ServiceCard = ({ service }) => {
             ))}
           </ul>
 
-          {/* Price and CTA */}
+          {/* Processing Time and CTA */}
           <div className="mt-4 pt-4 border-t border-gray-100">
             <div className="flex justify-between items-center">
-              {/* Price */}
+              {/* Processing Time */}
               <div>
-                {service.fee || service.price ? (
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-lg font-bold text-gray-900">
-                      ₹{service.fee || service.price}
-                    </span>
-                    <span className="text-sm text-gray-500">starting</span>
-                  </div>
-                ) : (
-                  <span className="text-sm text-gray-500">Price on inquiry</span>
-                )}
-                
-                {/* Processing Time */}
                 {service.processingTime && (
-                  <div className="flex items-center gap-1 mt-1">
+                  <div className="flex items-center gap-1">
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>

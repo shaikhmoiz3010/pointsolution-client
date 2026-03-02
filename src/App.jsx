@@ -1,6 +1,6 @@
 // client/src/App.jsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
@@ -17,6 +17,7 @@ import BookingSuccess from './pages/BookingSuccess';
 import BookingDetails from './pages/BookingDetails';
 import ServiceCategory from './pages/ServiceCategory';
 import NotFound from './pages/NotFound';
+import AdminDocumentVerification from './components/admin/AdminDocumentVerification';
 
 // Admin imports
 import AdminRoute from './components/admin/AdminRoute';
@@ -27,6 +28,7 @@ import AdminBookingDetails from './components/admin/AdminBookingDetails';
 import AdminUsers from './components/admin/AdminUsers';
 import AdminServices from './components/admin/AdminServices';
 import AdminAnalytics from './components/admin/AdminAnalytics';
+import AdminDocuments from './components/admin/AdminDocuments';
 
 // Protected Route Component
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -36,7 +38,7 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <div className="spinner"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -54,64 +56,76 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
   return children;
 };
 
+// Layout wrapper to conditionally show footer
+const AppLayout = ({ children }) => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  
+  return (
+    <div className="min-h-screen flex flex-col">
+      {!isAdminRoute && <Navbar />}
+      <main className="flex-grow">
+        {children}
+      </main>
+      {!isAdminRoute && <Footer />}
+    </div>
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen flex flex-col">
-          <Navbar />
+        <AppLayout>
+          <Routes>
+            {/* Public Routes */}
+            <Route path="*" element={<NotFound />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/service/:id" element={<ServiceDetails />} />
+            <Route path="/services/category/:category" element={<ServiceCategory />} />
+            <Route path="/services/:category/:serviceId" element={<ServiceDetails />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
+            <Route path="documents/:bookingId" element={<AdminDocumentVerification />} />
 
-          <main className="flex-grow">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="*" element={<NotFound />} />
-              <Route path="/" element={<Home />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/service/:id" element={<ServiceDetails />} />
-              <Route path="/services/category/:category" element={<ServiceCategory />} />
-              <Route path="/services/:category/:serviceId" element={<ServiceDetails />} />
-              <Route path="/services/:serviceId" element={<ServiceDetails />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/about" element={<About />} />
+            {/* Protected User Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/bookings/:id" element={
+              <ProtectedRoute>
+                <BookingDetails />
+              </ProtectedRoute>
+            } />
+            <Route path="/booking-success/:bookingId" element={
+              <ProtectedRoute>
+                <BookingSuccess />
+              </ProtectedRoute>
+            } />
 
-              {/* Protected User Routes */}
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/bookings/:id" element={
-                <ProtectedRoute>
-                  <BookingDetails />
-                </ProtectedRoute>
-              } />
-              <Route path="/booking-success/:bookingId" element={
-                <ProtectedRoute>
-                  <BookingSuccess />
-                </ProtectedRoute>
-              } />
-
-              {/* Admin Routes */}
-              <Route path="/admin/*" element={
-                <AdminRoute>
-                  <AdminLayout />
-                </AdminRoute>
-              }>
-                {/* Nested admin routes */}
-                <Route index element={<AdminDashboard />} />
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="bookings" element={<AdminBookings />} />
-                <Route path="bookings/:id" element={<AdminBookingDetails />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="services" element={<AdminServices />} />
-                <Route path="analytics" element={<AdminAnalytics />} />
-              </Route>
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+            {/* Admin Routes */}
+            <Route path="/admin/*" element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }>
+              <Route index element={<AdminDashboard />} />
+              <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="bookings" element={<AdminBookings />} />
+              <Route path="bookings/:id" element={<AdminBookingDetails />} />
+              <Route path="bookings/:bookingId/documents" element={<AdminDocumentVerification />} />
+              <Route path="documents" element={<AdminDocuments />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="services" element={<AdminServices />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
+            </Route>
+          </Routes>
+        </AppLayout>
       </Router>
     </AuthProvider>
   );

@@ -74,25 +74,19 @@ const ServiceDetails = () => {
     fetchServiceDetails();
   }, [id]);
 
-  const fetchServiceDetails = async () => {
-    try {
-      setLoading(true);
-      setError('');
-
-      const response = await getServiceById(id);
-
-      if (response && response.success) {
-        setService(response.service);
-      } else {
-        setError(response.message || 'Service not found');
-      }
-    } catch (error) {
-      console.error('Failed to fetch service:', error);
-      setError('Failed to load service details');
-    } finally {
-      setLoading(false);
+const fetchServiceDetails = async () => {
+  try {
+    setLoading(true);
+    const response = await getServiceById(id);
+    if (response.success) {
+      setService(response.service);
     }
-  };
+  } catch (error) {
+    console.error('Failed to fetch service:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleBookNow = () => {
     if (!isAuthenticated) {
@@ -203,16 +197,16 @@ const ServiceDetails = () => {
       <div className="container mx-auto px-4">
         {/* Breadcrumb */}
         <div className="mb-8">
-          <nav className="flex items-center text-sm text-gray-600">
-            <Link to="/" className="hover:text-gray-900 transition-colors">Home</Link>
+          <nav className="flex items-center text-sm text-indigo-700">
+            <Link to="/" className="hover:text-orange-500 transition-colors">Home</Link>
             <ArrowLeft className="w-4 h-4 mx-2 rotate-180" />
-            <Link to="/services" className="hover:text-gray-900 transition-colors">Services</Link>
+            <Link to="/services" className="hover:text-orange-500 transition-colors">Services</Link>
             <ArrowLeft className="w-4 h-4 mx-2 rotate-180" />
-            <Link to={`/services/category/${serviceCategory}`} className="hover:text-gray-900 transition-colors capitalize">
+            <Link to={`/services/category/${serviceCategory}`} className="hover:text-orange-500 transition-colors capitalize">
               {serviceCategory.replace(/-/g, ' ')}
             </Link>
             <ArrowLeft className="w-4 h-4 mx-2 rotate-180" />
-            <span className="text-gray-900 font-medium">{service.name}</span>
+            <span className="text-orange-500 font-medium">{service.name}</span>
           </nav>
         </div>
 
@@ -223,43 +217,19 @@ const ServiceDetails = () => {
             <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
               <div className="flex items-start justify-between">
                 <div>
-                  <div className="inline-block mb-4 px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm">
+                  <div className="inline-block mb-4 px-4 py-2 bg-orange-400 text-black-700 rounded-full text-sm">
                     {displayCategory}
                   </div>
-                  <h1 className="text-4xl font-bold text-gray-900 mb-4">{service.name}</h1>
+                  <h1 className="text-4xl font-bold text-blue-900 mb-4">{service.name}</h1>
                   <p className="text-xl text-gray-600">{service.description || 'No description available'}</p>
                 </div>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <ServiceIcon className="w-8 h-8 text-gray-700" />
-                </div>
+
               </div>
             </div>
 
             {/* Service Info Cards */}
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <Clock className="w-5 h-5 text-gray-700" />
-                  <h3 className="font-semibold text-gray-900">Processing Time</h3>
-                </div>
-                <p className="text-gray-600">{service.processingTime || '7-10 working days'}</p>
-              </div>
-              
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <Shield className="w-5 h-5 text-gray-700" />
-                  <h3 className="font-semibold text-gray-900">Security</h3>
-                </div>
-                <p className="text-gray-600">100% Secure & Confidential</p>
-              </div>
-              
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-4">
-                <div className="flex items-center gap-3 mb-2">
-                  <Users className="w-5 h-5 text-gray-700" />
-                  <h3 className="font-semibold text-gray-900">Support</h3>
-                </div>
-                <p className="text-gray-600">24/7 Customer Support</p>
-              </div>
+
             </div>
 
             {/* Detailed Description */}
@@ -273,24 +243,6 @@ const ServiceDetails = () => {
             )}
 
             {/* Requirements/Features */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">What's Included</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {(service.features || [
-                  'Expert assistance throughout the process',
-                  'Document verification and validation',
-                  'Government department follow-up',
-                  'Secure document handling',
-                  'Regular status updates',
-                  'Complete documentation support'
-                ]).map((feature, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-600">{feature}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
           {/* Right Column - Booking & Actions */}
@@ -304,10 +256,10 @@ const ServiceDetails = () => {
 
               {/* Pricing */}
               <div className="mb-6">
-                <div className="text-center mb-4">
+                {/* <div className="text-center mb-4">
                   <div className="text-4xl font-bold text-gray-900">₹{service.fee || 0}</div>
                   <div className="text-gray-600">Service Fee</div>
-                </div>
+                </div> */}
                 
                 <div className="space-y-3">
                   <div className="flex justify-between items-center py-3 border-b border-gray-100">
@@ -362,41 +314,18 @@ const ServiceDetails = () => {
                     <Phone className="w-5 h-5 text-gray-600" />
                     <div>
                       <p className="text-sm text-gray-600">Call us at</p>
-                      <a href="tel:+911234567890" className="text-gray-900 font-medium">+91 123 456 7890</a>
+                      <a href="tel:+91 83681 61577" className="text-gray-900 font-medium">+91 83681 61577</a>
                     </div>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
                     <Mail className="w-5 h-5 text-gray-600" />
                     <div>
                       <p className="text-sm text-gray-600">Email us at</p>
-                      <a href="mailto:support@1point1solution.com" className="text-gray-900 font-medium">support@1point1solution.com</a>
+                      <a href="mailto:info@1p1s.com" className="text-gray-900 font-medium">info@1p1s.com</a>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Why Choose Us Card */}
-            <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">Why Choose 1Point 1Solution?</h3>
-              <ul className="space-y-3">
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                  <span className="text-sm text-gray-600">Experienced documentation experts</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                  <span className="text-sm text-gray-600">100% legitimate & transparent process</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                  <span className="text-sm text-gray-600">Fast & hassle-free processing</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5" />
-                  <span className="text-sm text-gray-600">Secure document handling</span>
-                </li>
-              </ul>
             </div>
           </div>
         </div>

@@ -1,3 +1,4 @@
+// client/src/components/admin/AdminBookingDetails.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
@@ -8,6 +9,7 @@ import {
     Mail,
     MapPin,
     FileText,
+    Upload,
     CheckCircle,
     XCircle,
     Clock,
@@ -27,8 +29,6 @@ const AdminBookingDetails = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-
-    // Add these missing state variables:
     const [newStatus, setNewStatus] = useState('');
     const [updating, setUpdating] = useState(false);
     const [notification, setNotification] = useState('');
@@ -43,6 +43,7 @@ const AdminBookingDetails = () => {
                 id: booking._id,
                 category: booking.category,
                 serviceName: booking.serviceName,
+
                 hasCategory: !!booking.category,
                 bookingKeys: Object.keys(booking)
             });
@@ -54,7 +55,6 @@ const AdminBookingDetails = () => {
             setLoading(true);
             setError('');
 
-            // Check if ID is valid
             if (!id || id === 'undefined' || id === 'null') {
                 setError('Invalid booking ID');
                 setLoading(false);
@@ -81,7 +81,6 @@ const AdminBookingDetails = () => {
 
     const getFormattedCategory = () => {
         if (!booking?.category) {
-            // Try to get category from service if available
             if (booking?.service?.category) {
                 return booking.service.category.replace(/-/g, ' ').toUpperCase();
             }
@@ -102,6 +101,7 @@ const AdminBookingDetails = () => {
 
             if (response.success) {
                 setBooking(response.booking);
+                setNewStatus('');
                 alert('Booking status updated successfully!');
             }
         } catch (error) {
@@ -112,27 +112,10 @@ const AdminBookingDetails = () => {
         }
     };
 
-    const handleSendNotification = async () => {
-        if (!notification.trim()) return;
-
-        try {
-            const response = await sendNotification(id, {
-                message: notification,
-                type: 'update'
-            });
-
-            if (response.success) {
-                setNotification('');
-                alert('Notification sent successfully!');
-            }
-        } catch (error) {
-            console.error('Failed to send notification:', error);
-            alert('Failed to send notification');
-        }
-    };
 
     const getStatusColor = (status) => {
-        switch (status) {
+        const statusStr = status || 'pending';
+        switch (statusStr) {
             case 'pending': return 'bg-yellow-100 text-yellow-800';
             case 'processing': return 'bg-blue-100 text-blue-800';
             case 'completed': return 'bg-green-100 text-green-800';
@@ -142,7 +125,8 @@ const AdminBookingDetails = () => {
     };
 
     const getPaymentColor = (status) => {
-        switch (status) {
+        const statusStr = status || 'pending';
+        switch (statusStr) {
             case 'paid': return 'bg-green-100 text-green-800';
             case 'pending': return 'bg-yellow-100 text-yellow-800';
             case 'failed': return 'bg-red-100 text-red-800';
@@ -151,13 +135,18 @@ const AdminBookingDetails = () => {
     };
 
     const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleString('en-IN', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+        if (!dateString) return 'N/A';
+        try {
+            return new Date(dateString).toLocaleString('en-IN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (error) {
+            return 'Invalid date';
+        }
     };
 
     if (loading) {
@@ -201,9 +190,9 @@ const AdminBookingDetails = () => {
                     </button>
                     <h1 className="text-3xl font-bold text-gray-900">Booking Details</h1>
                     <div className="flex items-center gap-3 mt-2">
-                        <div className="font-mono font-semibold text-gray-700">{booking.bookingId}</div>
+                        <div className="font-mono font-semibold text-gray-700">{booking.bookingId || 'N/A'}</div>
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(booking.status)}`}>
-                            {booking.status.toUpperCase()}
+                            {(booking.status || 'PENDING').toUpperCase()}
                         </span>
                     </div>
                 </div>
@@ -234,8 +223,8 @@ const AdminBookingDetails = () => {
                                         key={status}
                                         onClick={() => setNewStatus(status)}
                                         className={`px-4 py-3 rounded-lg text-center transition-colors ${newStatus === status
-                                            ? getStatusColor(status)
-                                            : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                                                ? getStatusColor(status)
+                                                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
                                             }`}
                                     >
                                         <div className="font-medium capitalize">{status}</div>
@@ -243,12 +232,12 @@ const AdminBookingDetails = () => {
                                 ))}
                             </div>
 
-                            {newStatus !== booking.status && (
+                            {newStatus && newStatus !== booking.status && (
                                 <div className="pt-4 border-t border-gray-200">
                                     <div className="flex items-center gap-3">
                                         <span className="text-gray-600">From:</span>
                                         <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(booking.status)}`}>
-                                            {booking.status.toUpperCase()}
+                                            {(booking.status || 'pending').toUpperCase()}
                                         </span>
                                         <span className="text-gray-400">→</span>
                                         <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(newStatus)}`}>
@@ -310,11 +299,11 @@ const AdminBookingDetails = () => {
                                         <div className="flex items-start gap-2 p-3 bg-gray-50 rounded-lg">
                                             <MapPin className="w-4 h-4 text-gray-400 mt-1" />
                                             <div>
-                                                <p className="font-medium">{booking.userDetails.address.street}</p>
+                                                <p className="font-medium">{booking.userDetails.address.street || ''}</p>
                                                 <p className="text-sm text-gray-600">
-                                                    {booking.userDetails.address.city}, {booking.userDetails.address.state}
+                                                    {booking.userDetails.address.city || ''}, {booking.userDetails.address.state || ''}
                                                 </p>
-                                                <p className="text-sm text-gray-600">Pincode: {booking.userDetails.address.pincode}</p>
+                                                <p className="text-sm text-gray-600">Pincode: {booking.userDetails.address.pincode || ''}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -355,14 +344,13 @@ const AdminBookingDetails = () => {
                                 <div>
                                     <label className="block text-sm text-gray-600 mb-2">Service Name</label>
                                     <div className="p-3 bg-gray-50 rounded-lg">
-                                        <span className="font-bold text-lg">{booking.serviceName}</span>
+                                        <span className="font-bold text-lg">{booking.serviceName || 'Not specified'}</span>
                                     </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-sm text-gray-600 mb-2">Category</label>
                                     <p className="font-medium text-gray-900">
-                                        {/* Use the safe function */}
                                         {getFormattedCategory()}
                                     </p>
                                 </div>
@@ -377,25 +365,13 @@ const AdminBookingDetails = () => {
                             </div>
 
                             <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-2">Amount</label>
-                                    <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                                        <DollarSign className="w-4 h-4 text-gray-400" />
-                                        <span className="font-bold text-2xl">₹{booking.serviceFee}</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm text-gray-600 mb-2">Payment Status</label>
-                                    <div className={`inline-block px-4 py-2 rounded-full font-medium ${getPaymentColor(booking.paymentStatus)}`}>
-                                        {booking.paymentStatus.toUpperCase()}
-                                    </div>
-                                </div>
 
                                 <div>
                                     <label className="block text-sm text-gray-600 mb-2">Payment Method</label>
                                     <div className="p-3 bg-gray-50 rounded-lg">
-                                        <span className="font-medium capitalize">{booking.paymentMethod?.replace('_', ' ') || 'Not specified'}</span>
+                                        <span className="font-medium capitalize">
+                                            {(booking.paymentMethod || 'Not specified').replace('_', ' ')}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -435,8 +411,8 @@ const AdminBookingDetails = () => {
                                     <div key={index} className="flex">
                                         <div className="flex flex-col items-center mr-4">
                                             <div className={`w-3 h-3 rounded-full ${track.status === 'completed' ? 'bg-green-500' :
-                                                track.status === 'cancelled' ? 'bg-red-500' :
-                                                    track.status === 'processing' ? 'bg-blue-500' : 'bg-gray-300'
+                                                    track.status === 'cancelled' ? 'bg-red-500' :
+                                                        track.status === 'processing' ? 'bg-blue-500' : 'bg-gray-300'
                                                 }`}></div>
                                             {index < booking.tracking.length - 1 && (
                                                 <div className="w-px h-full bg-gray-300 mt-1"></div>
@@ -444,12 +420,12 @@ const AdminBookingDetails = () => {
                                         </div>
                                         <div className="flex-1 pb-4">
                                             <div className="flex justify-between items-start mb-1">
-                                                <span className="font-medium text-gray-800 capitalize">{track.status}</span>
+                                                <span className="font-medium text-gray-800 capitalize">{track.status || 'update'}</span>
                                                 <span className="text-sm text-gray-500">
-                                                    {new Date(track.timestamp || track.date).toLocaleString()}
+                                                    {formatDate(track.timestamp || track.date)}
                                                 </span>
                                             </div>
-                                            <p className="text-gray-600 text-sm">{track.message}</p>
+                                            <p className="text-gray-600 text-sm">{track.message || 'Status updated'}</p>
                                             {track.updatedBy && (
                                                 <p className="text-gray-500 text-xs mt-1">By: {track.updatedBy}</p>
                                             )}
@@ -463,7 +439,36 @@ const AdminBookingDetails = () => {
 
                 {/* Right Column - Actions & Communication */}
                 <div className="space-y-6">
+                    {/* Send Notification */}
+                    <div className="bg-white rounded-xl border border-gray-200 p-6">
 
+
+
+
+                        <div className="bg-white rounded-xl border border-gray-200 p-6">
+                            <div className="flex items-center gap-3 mb-4">
+                                <div className="p-2 bg-purple-100 rounded-lg">
+                                    <FileText className="w-5 h-5 text-purple-600" />
+                                </div>
+                                <h4 className="font-semibold text-gray-900">Documents</h4>
+                            </div>
+
+                            <div className="space-y-3">
+                                <p className="text-sm text-gray-600">
+                                    View and verify documents uploaded by the user for this booking.
+                                </p>
+
+                                <Link
+                                    to={`/admin/bookings/${booking._id}/documents`}
+                                    className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                                >
+                                    <Upload className="w-4 h-4" />
+                                    Manage Documents
+                                </Link>
+                            </div>
+                        </div>
+
+                    </div>
 
 
                     {/* Booking Summary */}
@@ -472,7 +477,7 @@ const AdminBookingDetails = () => {
                         <div className="space-y-3">
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <span className="text-gray-600">Booking ID</span>
-                                <span className="font-mono font-medium">{booking.bookingId}</span>
+                                <span className="font-mono font-medium">{booking.bookingId || 'N/A'}</span>
                             </div>
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <span className="text-gray-600">Created On</span>
@@ -481,12 +486,6 @@ const AdminBookingDetails = () => {
                             <div className="flex justify-between items-center py-2 border-b border-gray-100">
                                 <span className="text-gray-600">Last Updated</span>
                                 <span className="font-medium">{formatDate(booking.updatedAt)}</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span className="text-gray-600">Customer Since</span>
-                                <span className="font-medium">
-                                    {booking.user?.createdAt ? formatDate(booking.user.createdAt) : 'N/A'}
-                                </span>
                             </div>
                         </div>
                     </div>
