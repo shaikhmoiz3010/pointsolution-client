@@ -4,13 +4,13 @@ import { getServiceById } from '../utils/api';
 import { createBooking } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
 import BookingForm from '../components/BookingForm';
-import { 
-  ArrowLeft, 
-  Clock, 
-  Shield, 
-  FileText, 
-  CheckCircle, 
-  Users, 
+import {
+  ArrowLeft,
+  Clock,
+  Shield,
+  FileText,
+  CheckCircle,
+  Users,
   Award,
   Calendar,
   Phone,
@@ -31,7 +31,7 @@ import {
 // Icon mapping function
 const getServiceIcon = (serviceName) => {
   const name = serviceName?.toLowerCase() || '';
-  
+
   if (name.includes('vehicle') || name.includes('rto') || name.includes('driving') || name.includes('license')) {
     return Car;
   }
@@ -56,7 +56,7 @@ const getServiceIcon = (serviceName) => {
   if (name.includes('business') || name.includes('gst') || name.includes('company') || name.includes('registration')) {
     return Briefcase;
   }
-  
+
   return FileText;
 };
 
@@ -142,7 +142,7 @@ const ServiceDetails = () => {
       }
     } catch (error) {
       console.error('Booking failed:', error);
-      
+
       if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else if (error.response?.status === 404) {
@@ -168,10 +168,10 @@ const ServiceDetails = () => {
         faqs: []
       };
     }
-    
+
     const category = service.category?.toLowerCase() || '';
     const name = service.name?.toLowerCase() || '';
-    
+
     if (category.includes('rto') || name.includes('vehicle') || name.includes('license')) {
       return {
         overview: `Looking for ${service.name} service, 1 Point 1 Solution provides end-to-end assistance for all your vehicle and driving license related needs. We understand that dealing with RTO (Regional Transport Office) can be time-consuming and complex. Our expert team handles the entire process, saving you valuable time and ensuring all documentation is correctly prepared and submitted.`,
@@ -207,7 +207,7 @@ const ServiceDetails = () => {
         ]
       };
     }
-    
+
     if (category.includes('passport') || name.includes('passport')) {
       return {
         overview: `${service.name} service simplifies the passport application process. We provide complete guidance and assistance from application form filling to appointment booking and document verification. Our experts ensure your application meets all requirements to avoid delays or rejections.`,
@@ -242,7 +242,7 @@ const ServiceDetails = () => {
         ]
       };
     }
-    
+
     if (category.includes('certificate') || name.includes('birth') || name.includes('marriage') || name.includes('death')) {
       return {
         overview: ` ${service.name} service provides comprehensive assistance in obtaining and managing vital certificates. Whether you need a birth certificate, marriage certificate, or death certificate, our team ensures a smooth process from application to delivery.`,
@@ -276,7 +276,7 @@ const ServiceDetails = () => {
         ]
       };
     }
-    
+
     if (category.includes('property') || name.includes('land') || name.includes('mutation')) {
       return {
         overview: `${service.name} service helps you navigate the complex property registration and documentation process. We assist with property mutation, title verification, and all related documentation to ensure legal compliance and smooth transactions.`,
@@ -311,7 +311,7 @@ const ServiceDetails = () => {
         ]
       };
     }
-    
+
     // Default comprehensive description
     return {
       overview: `${service.name} service is designed to provide you with professional, reliable, and efficient assistance. We understand that government documentation can be complex and time-consuming. Our expert team ensures that your application is processed smoothly, with minimal hassle on your part.`,
@@ -391,7 +391,7 @@ const ServiceDetails = () => {
 
   // Call getComprehensiveDescription only after service is confirmed to exist
   const comprehensiveDetails = getComprehensiveDescription();
-  
+
   const serviceCategory = service.category || '';
   const displayCategory = serviceCategory.replace(/-/g, ' ').toUpperCase();
   const ServiceIcon = getServiceIcon(service.name);
@@ -435,44 +435,40 @@ const ServiceDetails = () => {
               <div className="flex border-b border-gray-200">
                 <button
                   onClick={() => setActiveTab('description')}
-                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
-                    activeTab === 'description'
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${activeTab === 'description'
                       ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <Info className="w-5 h-5 inline-block mr-2" />
                   Overview
                 </button>
                 <button
                   onClick={() => setActiveTab('process')}
-                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
-                    activeTab === 'process'
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${activeTab === 'process'
                       ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <ListChecks className="w-5 h-5 inline-block mr-2" />
                   Process
                 </button>
                 <button
                   onClick={() => setActiveTab('documents')}
-                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
-                    activeTab === 'documents'
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${activeTab === 'documents'
                       ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <FileText className="w-5 h-5 inline-block mr-2" />
                   Documents
                 </button>
                 <button
                   onClick={() => setActiveTab('faq')}
-                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
-                    activeTab === 'faq'
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${activeTab === 'faq'
                       ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
+                    }`}
                 >
                   <HelpCircle className="w-5 h-5 inline-block mr-2" />
                   FAQs
@@ -487,7 +483,7 @@ const ServiceDetails = () => {
                       <h3 className="text-xl font-bold text-gray-900 mb-3">Service Overview</h3>
                       <p className="text-gray-700 leading-relaxed">{comprehensiveDetails.overview}</p>
                     </div>
-                    
+
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-3">Key Benefits</h3>
                       <div className="grid md:grid-cols-2 gap-3">
@@ -544,7 +540,7 @@ const ServiceDetails = () => {
                         <p className="text-sm text-gray-600">Please ensure all documents are clear and valid</p>
                       </div>
                     </div>
-                    
+
                     <div className="grid md:grid-cols-2 gap-3">
                       {comprehensiveDetails.documents.map((doc, index) => (
                         <div key={index} className="flex items-start gap-2 p-3 bg-gray-50 rounded-lg">
@@ -553,7 +549,7 @@ const ServiceDetails = () => {
                         </div>
                       ))}
                     </div>
-                    
+
                     <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                       <p className="text-sm text-gray-600">
                         <strong>Note:</strong> Additional documents may be required based on your specific case. Our team will guide you through the complete document checklist during consultation.
@@ -619,15 +615,17 @@ const ServiceDetails = () => {
                 <p className="text-gray-600">Complete your booking in minutes</p>
               </div>
 
-              {/* Pricing Info */}
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-600">Service Fee</span>
-                  <span className="text-2xl font-bold text-gray-900">₹{service.price || 499}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Clock className="w-4 h-4" />
-                  <span>Processing time: {comprehensiveDetails.timeline}</span>
+              {/*  Info */}
+              <div className="mb-6">
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-3">
+                    <div className="flex items-center gap-2">
+                      <Award className="w-4 h-4 text-gray-500" />
+                      <span className="text-gray-600">Service Type</span>
+                    </div>
+                    <span className="font-medium text-gray-900">{displayCategory}</span>
+                  </div>
                 </div>
               </div>
 
@@ -684,8 +682,8 @@ const ServiceDetails = () => {
 
         {/* Back Button */}
         <div className="mt-12 text-center">
-          <Link 
-            to="/services" 
+          <Link
+            to="/services"
             className="inline-flex items-center px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
