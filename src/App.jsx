@@ -30,6 +30,9 @@ import AdminServices from './components/admin/AdminServices';
 import AdminAnalytics from './components/admin/AdminAnalytics';
 import AdminDocuments from './components/admin/AdminDocuments';
 
+
+
+
 // Protected Route Component
 const ProtectedRoute = ({ children, adminOnly = false }) => {
   const { user, loading } = useAuth();
@@ -57,17 +60,19 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
 };
 
 // Layout wrapper to conditionally show footer
+
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isDashboardRoute = location.pathname === '/dashboard';
   
   return (
     <div className="min-h-screen flex flex-col">
-      {!isAdminRoute && <Navbar />}
+      {!isAdminRoute && !isDashboardRoute && <Navbar />}
       <main className="flex-grow">
         {children}
       </main>
-      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && !isDashboardRoute && <Footer />}
     </div>
   );
 };

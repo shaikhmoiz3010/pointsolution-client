@@ -153,7 +153,14 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24 pb-12">
+    <div className="min-h-screen bg-gray-50">
+
+            <Link
+              to="/"
+              className="inline-flex items-center justify-center mx-8 my-3  px-6 py-3  bg-orange-400 text-gray-100 rounded-xl font-semibold hover:bg-orange-600 transition-all shadow-md hover:shadow-lg"
+            >
+              Back to Home
+            </Link>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Welcome Section */}
         <div className="bg-gray-800 rounded-2xl p-6 sm:p-8 mb-8 shadow-lg">
