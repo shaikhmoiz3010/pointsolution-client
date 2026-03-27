@@ -290,7 +290,7 @@ const Home = () => {
           <p className="text-gray-500 max-w-2xl mx-auto text-lg">We simplify government documentation across multiple categories so you can focus on what matters most.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
           {sortedCategories.map((category) => {
             const details = getCategoryDetails(category.id);
             const Icon = getCategoryIcon(category.id);
@@ -305,9 +305,9 @@ const Home = () => {
                   <Icon className="w-12 h-12" />
                 </div>
                 <h3 className="text-2xl font-bold mb-4 text-gray-800">{details.name}</h3>
-                <p className="text-gray-600 mb-6">
+                {/* <p className="text-gray-600 mb-6">
                   {details.description}
-                </p>
+                </p> */}
                 <div className="flex items-center justify-center gap-2 text-blue-600 font-bold">
                   <span> Explore {details.name}</span>
                   <ArrowRight className="w-5 h-5" />

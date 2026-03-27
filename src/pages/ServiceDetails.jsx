@@ -16,7 +16,16 @@ import {
   Phone,
   Mail,
   Home,
-  Briefcase
+  Briefcase,
+  Info,
+  ListChecks,
+  AlertCircle,
+  Star,
+  ThumbsUp,
+  HelpCircle,
+  DollarSign,
+  RefreshCw,
+  MessageCircle
 } from 'lucide-react';
 
 // Icon mapping function
@@ -69,24 +78,25 @@ const ServiceDetails = () => {
   const [loading, setLoading] = useState(true);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [error, setError] = useState('');
+  const [activeTab, setActiveTab] = useState('description');
 
   useEffect(() => {
     fetchServiceDetails();
   }, [id]);
 
-const fetchServiceDetails = async () => {
-  try {
-    setLoading(true);
-    const response = await getServiceById(id);
-    if (response.success) {
-      setService(response.service);
+  const fetchServiceDetails = async () => {
+    try {
+      setLoading(true);
+      const response = await getServiceById(id);
+      if (response.success) {
+        setService(response.service);
+      }
+    } catch (error) {
+      console.error('Failed to fetch service:', error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Failed to fetch service:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleBookNow = () => {
     if (!isAuthenticated) {
@@ -145,6 +155,197 @@ const fetchServiceDetails = async () => {
     }
   };
 
+  // Generate comprehensive description based on service category and name
+  const getComprehensiveDescription = () => {
+    // Add null check at the beginning
+    if (!service) {
+      return {
+        overview: '',
+        process: [],
+        benefits: [],
+        documents: [],
+        timeline: '',
+        faqs: []
+      };
+    }
+    
+    const category = service.category?.toLowerCase() || '';
+    const name = service.name?.toLowerCase() || '';
+    
+    if (category.includes('rto') || name.includes('vehicle') || name.includes('license')) {
+      return {
+        overview: `Looking for ${service.name} service, 1 Point 1 Solution provides end-to-end assistance for all your vehicle and driving license related needs. We understand that dealing with RTO (Regional Transport Office) can be time-consuming and complex. Our expert team handles the entire process, saving you valuable time and ensuring all documentation is correctly prepared and submitted.`,
+        process: [
+          'Initial consultation to understand your specific requirements',
+          'Document verification and checklist preparation',
+          'Form filling and application preparation',
+          'Document submission to the concerned RTO',
+          'Follow-up with RTO officials for processing',
+          'Regular status updates via SMS and email',
+          'Collection and delivery of documents/license'
+        ],
+        benefits: [
+          'Save time and avoid multiple trips to RTO',
+          'Expert handling of complex documentation',
+          'Guaranteed error-free applications',
+          'Regular updates on application status',
+          'Doorstep document pickup and delivery',
+          'Professional assistance throughout the process'
+        ],
+        documents: [
+          'Proof of identity (Aadhaar, PAN, Voter ID)',
+          'Proof of address (Utility bills, Rent agreement)',
+          'Passport size photographs',
+          'Age proof (Birth certificate, School certificate)',
+          'Existing license (if applicable)',
+          'Form 1A (Medical certificate for commercial vehicles)'
+        ],
+        timeline: 'Typically 7-15 working days depending on RTO processing time',
+        faqs: [
+          { q: 'Is this service available for all types of vehicles?', a: 'Yes, we assist with all types of vehicles including cars, bikes, and commercial vehicles.' },
+          { q: 'Do I need to visit the RTO?', a: 'In most cases, no. Our representatives handle the submission and follow-up. However, for biometric verification, your presence might be required.' }
+        ]
+      };
+    }
+    
+    if (category.includes('passport') || name.includes('passport')) {
+      return {
+        overview: `${service.name} service simplifies the passport application process. We provide complete guidance and assistance from application form filling to appointment booking and document verification. Our experts ensure your application meets all requirements to avoid delays or rejections.`,
+        process: [
+          'Assessment of your passport requirement (fresh/renewal)',
+          'Document checklist and verification',
+          'Online application form filling assistance',
+          'Appointment booking at Passport Seva Kendra (PSK)',
+          'Document preparation and organization',
+          'Guidance for PSK visit and interview',
+          'Post-submission follow-up and tracking'
+        ],
+        benefits: [
+          'Hassle-free application process',
+          'Expert document verification',
+          'Priority appointment booking',
+          'Assistance with police verification if needed',
+          'End-to-end support until passport delivery'
+        ],
+        documents: [
+          'Proof of date of birth (Birth certificate, School certificate)',
+          'Proof of identity (Aadhaar, Voter ID, PAN)',
+          'Proof of address (Utility bills, Bank statement)',
+          'Passport size photographs (with specific specifications)',
+          'Existing passport (for renewal)',
+          'Police verification form (if applicable)'
+        ],
+        timeline: 'Typically 7-30 days depending on application type and verification status',
+        faqs: [
+          { q: 'What is the difference between fresh and renewal application?', a: 'Fresh applications are for first-time applicants, while renewal is for those whose passport has expired or is about to expire.' },
+          { q: 'Will I need to visit the passport office?', a: 'Yes, you need to visit PSK for document verification and biometrics. We help you prepare for this visit.' }
+        ]
+      };
+    }
+    
+    if (category.includes('certificate') || name.includes('birth') || name.includes('marriage') || name.includes('death')) {
+      return {
+        overview: ` ${service.name} service provides comprehensive assistance in obtaining and managing vital certificates. Whether you need a birth certificate, marriage certificate, or death certificate, our team ensures a smooth process from application to delivery.`,
+        process: [
+          'Requirement analysis and document assessment',
+          'Application form preparation and verification',
+          'Submission to concerned municipal office/registrar',
+          'Follow-up with authorities for processing',
+          'Status tracking and regular updates',
+          'Certificate collection and delivery'
+        ],
+        benefits: [
+          'Avoid bureaucratic hassles',
+          'Timely processing and delivery',
+          'Expert documentation handling',
+          'Doorstep service available',
+          'Multi-language support'
+        ],
+        documents: [
+          'Proof of event date and place',
+          'Hospital records (for birth)',
+          'Marriage invitation/affidavit (for marriage)',
+          'Identity proof of applicants',
+          'Address proof',
+          'Photographs as required'
+        ],
+        timeline: 'Typically 15-30 working days depending on municipality processing',
+        faqs: [
+          { q: 'Can I get certificates for events that happened years ago?', a: 'Yes, we can assist with delayed registrations. Additional documents may be required.' },
+          { q: 'Are these certificates valid for international use?', a: 'Yes, but they may need apostille or attestation for international use, which we can also assist with.' }
+        ]
+      };
+    }
+    
+    if (category.includes('property') || name.includes('land') || name.includes('mutation')) {
+      return {
+        overview: `${service.name} service helps you navigate the complex property registration and documentation process. We assist with property mutation, title verification, and all related documentation to ensure legal compliance and smooth transactions.`,
+        process: [
+          'Property document verification',
+          'Title search and due diligence',
+          'Application preparation for mutation/registration',
+          'Document submission to sub-registrar office',
+          'Stamp duty and registration fee calculation',
+          'Follow-up for registration completion',
+          'Document collection and delivery'
+        ],
+        benefits: [
+          'Legal document verification',
+          'Avoid title disputes',
+          'Accurate valuation and stamp duty calculation',
+          'Expert guidance on legal requirements',
+          'Quick processing and tracking'
+        ],
+        documents: [
+          'Title deeds and chain of documents',
+          'Sale agreement',
+          'Property tax receipts',
+          'Encumbrance certificate',
+          'Identity and address proof of parties',
+          'PAN card of all parties'
+        ],
+        timeline: 'Typically 15-45 days depending on property type and location',
+        faqs: [
+          { q: 'What is property mutation?', a: 'Property mutation is the process of transferring property ownership records in government records after a sale or inheritance.' },
+          { q: 'Do I need legal verification before buying property?', a: 'Yes, title verification is crucial to ensure the seller has clear ownership rights and there are no legal disputes.' }
+        ]
+      };
+    }
+    
+    // Default comprehensive description
+    return {
+      overview: `${service.name} service is designed to provide you with professional, reliable, and efficient assistance. We understand that government documentation can be complex and time-consuming. Our expert team ensures that your application is processed smoothly, with minimal hassle on your part.`,
+      process: [
+        'Initial consultation to understand your requirements',
+        'Document verification and checklist preparation',
+        'Application form filling and preparation',
+        'Document submission to concerned authorities',
+        'Regular follow-up and status tracking',
+        'Final document collection and delivery'
+      ],
+      benefits: [
+        'Save time and effort',
+        'Expert guidance throughout the process',
+        'Hassle-free documentation',
+        'Regular updates on application status',
+        'Professional and reliable service'
+      ],
+      documents: [
+        'Identity proof (Aadhaar, PAN, Voter ID)',
+        'Address proof (Utility bills, Bank statement)',
+        'Photographs as required',
+        'Any existing documents related to the service',
+        'Additional documents as per service requirements'
+      ],
+      timeline: 'Processing time varies based on government department and application complexity',
+      faqs: [
+        { q: 'How long does the process take?', a: 'Processing time depends on the specific service and government department. Our team will provide you with an estimated timeline during consultation.' },
+        { q: 'Do I need to visit government offices?', a: 'In most cases, our representatives handle submissions. However, for certain services like biometric verification, your presence might be required.' },
+        { q: 'What if my application gets rejected?', a: 'We review all applications thoroughly to minimize rejection risk. In case of rejection, we help you understand the reason and assist with reapplication.' }
+      ]
+    };
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white flex items-center justify-center">
@@ -188,16 +389,19 @@ const fetchServiceDetails = async () => {
     );
   }
 
+  // Call getComprehensiveDescription only after service is confirmed to exist
+  const comprehensiveDetails = getComprehensiveDescription();
+  
   const serviceCategory = service.category || '';
   const displayCategory = serviceCategory.replace(/-/g, ' ').toUpperCase();
   const ServiceIcon = getServiceIcon(service.name);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white pt-32 pb-20">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-7xl">
         {/* Breadcrumb */}
         <div className="mb-8">
-          <nav className="flex items-center text-sm text-indigo-700">
+          <nav className="flex items-center text-sm text-gray-600">
             <Link to="/" className="hover:text-orange-500 transition-colors">Home</Link>
             <ArrowLeft className="w-4 h-4 mx-2 rotate-180" />
             <Link to="/services" className="hover:text-orange-500 transition-colors">Services</Link>
@@ -216,33 +420,194 @@ const fetchServiceDetails = async () => {
             {/* Service Header */}
             <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
               <div className="flex items-start justify-between">
-                <div>
-                  <div className="inline-block mb-4 px-4 py-2 bg-orange-400 text-black-700 rounded-full text-sm">
+                <div className="flex-1">
+                  <div className="inline-block mb-4 px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
                     {displayCategory}
                   </div>
-                  <h1 className="text-4xl font-bold text-blue-900 mb-4">{service.name}</h1>
-                  <p className="text-xl text-gray-600">{service.description || 'No description available'}</p>
+                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{service.name}</h1>
+                  <p className="text-lg text-gray-600">{service.description || 'No description available'}</p>
                 </div>
-
               </div>
             </div>
 
-            {/* Service Info Cards */}
-            <div className="grid md:grid-cols-3 gap-4">
+            {/* Tab Navigation */}
+            <div className="bg-white border-2 border-gray-200 rounded-xl overflow-hidden">
+              <div className="flex border-b border-gray-200">
+                <button
+                  onClick={() => setActiveTab('description')}
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                    activeTab === 'description'
+                      ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  <Info className="w-5 h-5 inline-block mr-2" />
+                  Overview
+                </button>
+                <button
+                  onClick={() => setActiveTab('process')}
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                    activeTab === 'process'
+                      ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  <ListChecks className="w-5 h-5 inline-block mr-2" />
+                  Process
+                </button>
+                <button
+                  onClick={() => setActiveTab('documents')}
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                    activeTab === 'documents'
+                      ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  <FileText className="w-5 h-5 inline-block mr-2" />
+                  Documents
+                </button>
+                <button
+                  onClick={() => setActiveTab('faq')}
+                  className={`flex-1 px-6 py-4 text-center font-medium transition-colors ${
+                    activeTab === 'faq'
+                      ? 'text-orange-500 border-b-2 border-orange-500 bg-orange-50'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  }`}
+                >
+                  <HelpCircle className="w-5 h-5 inline-block mr-2" />
+                  FAQs
+                </button>
+              </div>
 
+              {/* Tab Content */}
+              <div className="p-6">
+                {activeTab === 'description' && (
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">Service Overview</h3>
+                      <p className="text-gray-700 leading-relaxed">{comprehensiveDetails.overview}</p>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">Key Benefits</h3>
+                      <div className="grid md:grid-cols-2 gap-3">
+                        {comprehensiveDetails.benefits.map((benefit, index) => (
+                          <div key={index} className="flex items-start gap-2">
+                            <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                            <span className="text-gray-700">{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">Estimated Timeline</h3>
+                      <div className="flex items-start gap-3 p-4 bg-blue-50 rounded-lg">
+                        <Clock className="w-6 h-6 text-blue-600 flex-shrink-0" />
+                        <div>
+                          <p className="text-gray-900 font-medium">Processing Time</p>
+                          <p className="text-gray-700">{comprehensiveDetails.timeline}</p>
+                          <p className="text-sm text-gray-600 mt-1">*Actual time may vary based on government processing</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'process' && (
+                  <div className="space-y-6">
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">How It Works</h3>
+                    <div className="space-y-4">
+                      {comprehensiveDetails.process.map((step, index) => (
+                        <div key={index} className="flex items-start gap-4">
+                          <div className="w-8 h-8 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center font-bold flex-shrink-0">
+                            {index + 1}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-gray-700">{step}</p>
+                            {index < comprehensiveDetails.process.length - 1 && (
+                              <div className="ml-4 mt-2 w-px h-4 bg-gray-300"></div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'documents' && (
+                  <div className="space-y-6">
+                    <div className="flex items-start gap-3 p-4 bg-yellow-50 rounded-lg mb-6">
+                      <AlertCircle className="w-6 h-6 text-yellow-600 flex-shrink-0" />
+                      <div>
+                        <p className="text-gray-900 font-medium">Document Requirements</p>
+                        <p className="text-sm text-gray-600">Please ensure all documents are clear and valid</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {comprehensiveDetails.documents.map((doc, index) => (
+                        <div key={index} className="flex items-start gap-2 p-3 bg-gray-50 rounded-lg">
+                          <FileText className="w-5 h-5 text-gray-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">{doc}</span>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                      <p className="text-sm text-gray-600">
+                        <strong>Note:</strong> Additional documents may be required based on your specific case. Our team will guide you through the complete document checklist during consultation.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === 'faq' && (
+                  <div className="space-y-4">
+                    {comprehensiveDetails.faqs.map((faq, index) => (
+                      <div key={index} className="border-b border-gray-200 pb-4 last:border-0">
+                        <h4 className="text-lg font-semibold text-gray-900 mb-2 flex items-start gap-2">
+                          <HelpCircle className="w-5 h-5 text-orange-500 mt-1 flex-shrink-0" />
+                          {faq.q}
+                        </h4>
+                        <p className="text-gray-700 ml-7">{faq.a}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Detailed Description */}
-            {service.detailedDescription && (
-              <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Service Details</h2>
-                <div className="prose max-w-none">
-                  <p className="text-gray-600 leading-relaxed">{service.detailedDescription}</p>
+            {/* Service Guarantee */}
+            <div className="bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-xl p-6">
+              <div className="flex items-start gap-4">
+                <Shield className="w-12 h-12 text-green-600 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2">Our Service Guarantee</h3>
+                  <p className="text-gray-700 mb-3">
+                    We are committed to providing you with the highest quality service. Our team ensures:
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-2">
+                    <div className="flex items-center gap-2">
+                      <ThumbsUp className="w-4 h-4 text-green-600" />
+                      <span className="text-sm text-gray-700">100% Professional Service</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-green-600" />
+                      <span className="text-sm text-gray-700">Timely Updates & Follow-ups</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4 text-green-600" />
+                      <span className="text-sm text-gray-700">Free Re-submission if Required</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MessageCircle className="w-4 h-4 text-green-600" />
+                      <span className="text-sm text-gray-700">24/7 Customer Support</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
-
-            {/* Requirements/Features */}
+            </div>
           </div>
 
           {/* Right Column - Booking & Actions */}
@@ -254,28 +619,15 @@ const fetchServiceDetails = async () => {
                 <p className="text-gray-600">Complete your booking in minutes</p>
               </div>
 
-              {/* Pricing */}
-              <div className="mb-6">
-                {/* <div className="text-center mb-4">
-                  <div className="text-4xl font-bold text-gray-900">₹{service.fee || 0}</div>
-                  <div className="text-gray-600">Service Fee</div>
-                </div> */}
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-3 border-b border-gray-100">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-600">Processing Time</span>
-                    </div>
-                    <span className="font-medium text-gray-900">{service.processingTime || '7-10 days'}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-3">
-                    <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-gray-500" />
-                      <span className="text-gray-600">Service Type</span>
-                    </div>
-                    <span className="font-medium text-gray-900">{displayCategory}</span>
-                  </div>
+              {/* Pricing Info */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-gray-600">Service Fee</span>
+                  <span className="text-2xl font-bold text-gray-900">₹{service.price || 499}</span>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Clock className="w-4 h-4" />
+                  <span>Processing time: {comprehensiveDetails.timeline}</span>
                 </div>
               </div>
 
@@ -330,7 +682,7 @@ const fetchServiceDetails = async () => {
           </div>
         </div>
 
-        {/* Related Services/Back Button */}
+        {/* Back Button */}
         <div className="mt-12 text-center">
           <Link 
             to="/services" 

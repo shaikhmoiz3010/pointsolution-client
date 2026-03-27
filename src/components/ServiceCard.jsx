@@ -85,10 +85,7 @@ const getServiceItems = (service) => {
 
   // Default features based on category
   const defaultItems = [
-    "Expert Assistance",
-    "Document Verification",
-    "Fast Processing",
-    "Government Approved"
+
   ];
 
   return defaultItems;
@@ -140,17 +137,6 @@ const ServiceCard = ({ service }) => {
           {/* Processing Time and CTA */}
           <div className="mt-4 pt-4 border-t border-gray-100">
             <div className="flex justify-between items-center">
-              {/* Processing Time */}
-              <div>
-                {service.processingTime && (
-                  <div className="flex items-center gap-1">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <span className="text-xs text-gray-500">{service.processingTime}</span>
-                  </div>
-                )}
-              </div>
 
               {/* CTA Button */}
               <Link

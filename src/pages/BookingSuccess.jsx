@@ -141,10 +141,6 @@ const BookingSuccess = () => {
                     })}</span>
                   </div>
                   <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full"></div>
-                  <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="w-4 h-4 text-blue-500" />
-                    <span>Est. processing: 2-3 business days</span>
-                  </div>
                 </div>
 
                 {/* Quick Actions */}

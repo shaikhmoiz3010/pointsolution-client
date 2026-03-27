@@ -183,7 +183,7 @@ const Services = () => {
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="px-4 py-3 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-purple-400 focus:ring-4 focus:ring-purple-100 outline-none transition-all min-w-[200px]"
               >
-                <option value="all">All Categories ({services.length})</option>
+                <option value="all">All Services ({services.length})</option>
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.name} ({category.count})
@@ -263,16 +263,12 @@ const Services = () => {
               </span></>
             )}
           </p>
-          {filteredServices.length > 0 && (
-            <p className="text-sm text-gray-500">
-              Page 1 of {Math.ceil(filteredServices.length / 9)}
-            </p>
-          )}
+
         </div>
 
         {/* Services Grid */}
         {filteredServices.length > 0 ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredServices.map((service) => (
               <ServiceCard key={service._id} service={service} />
             ))}
