@@ -2,19 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ServiceCard from '../components/ServiceCard';
 import { getServicesByCategory } from '../utils/api';
-import { ArrowLeft, CheckCircle, FileText, Shield, Clock, Users } from 'lucide-react';
-// Import icons
+import { ArrowLeft, FileText, Shield } from 'lucide-react';
 import {
   Car,
   Award,
   FolderOpen,
   CreditCard,
-  HomeIcon,
   User,
   Briefcase,
   FileCheck,
   BookOpen,
-  Clipboard
+  Clipboard,
+  ClipboardList
 } from 'lucide-react';
 
 const ServiceCategory = () => {
@@ -31,9 +30,7 @@ const ServiceCategory = () => {
     try {
       setLoading(true);
       setError('');
-
       const response = await getServicesByCategory(category);
-
       if (response.success) {
         setServices(response.services || []);
       } else {
@@ -47,10 +44,20 @@ const ServiceCategory = () => {
     }
   };
 
-  // Format category name for display
   const formatCategoryName = (cat) => {
     if (!cat) return '';
-    return cat
+    const nameMap = {
+      'licenses': 'Driving Licences',
+      'registration-certificate': 'Registration Certificate',
+      'gst': 'GST & Tax Services',
+      'challan': 'Traffic Challan',
+      'passport': 'Passport Services',
+      'legal': 'Legal Documents',
+      'insurance': 'Insurance Services',
+      'pan-card': 'PAN Card Services',
+      'other': 'Other Services'
+    };
+    return nameMap[cat] || cat
       .replace(/-/g, ' ')
       .split(' ')
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -59,27 +66,24 @@ const ServiceCategory = () => {
 
   const categoryName = formatCategoryName(category);
 
-  // Get icon based on category
   const getCategoryIcon = () => {
     const cat = category?.toLowerCase() || '';
-
-    if (cat.includes('rto')) return Car;
+    if (cat === 'licenses') return Car;
+    if (cat === 'registration-certificate') return ClipboardList;
+    if (cat === 'insurance') return Shield;
+    if (cat === 'pan-card') return CreditCard;
+    if (cat.includes('gst')) return Briefcase;
     if (cat.includes('passport')) return FileText;
     if (cat.includes('certificate')) return Award;
     if (cat.includes('document')) return FolderOpen;
-    if (cat.includes('pan')) return CreditCard;
-    if (cat.includes('property')) return HomeIcon;
+    if (cat.includes('challan')) return CreditCard;
     if (cat.includes('identity')) return User;
-    if (cat.includes('business')) return Briefcase;
     if (cat.includes('legal')) return FileCheck;
     if (cat.includes('police')) return Shield;
     if (cat.includes('education')) return BookOpen;
     if (cat.includes('income')) return Clipboard;
-
     return FileText;
   };
-
-
 
   if (loading) {
     return (
@@ -155,19 +159,15 @@ const ServiceCategory = () => {
           </div>
         </div>
 
-        {/* Category Stats */}
-
         {/* Services Grid */}
         {services.length === 0 ? (
           <div className="bg-white border-2 border-gray-200 rounded-xl p-8 text-center">
             <div className="w-16 h-16 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center mx-auto mb-4">
               <FileText className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              No services found
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">No services found</h3>
             <p className="text-gray-500 mb-6 max-w-md mx-auto">
-              There are no services available in this category at the moment. Check back soon or explore other categories.
+              There are no services available in this category at the moment.
             </p>
             <Link
               to="/services"
@@ -184,7 +184,6 @@ const ServiceCategory = () => {
                 <ServiceCard key={index} service={service} />
               ))}
             </div>
-
             <div className="text-center mt-8">
               <Link
                 to="/services"
@@ -197,7 +196,6 @@ const ServiceCategory = () => {
           </>
         )}
 
-
         {/* CTA Section */}
         <div className="mt-16 text-center">
           <div className="bg-gradient-to-r from-gray-800 to-gray-900 rounded-2xl p-8 text-white">
@@ -205,11 +203,11 @@ const ServiceCategory = () => {
               Need Help with {categoryName} Documentation?
             </h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
-              Our experts are here to guide you through the entire process. Contact us for personalized assistance.
+              Our experts are here to guide you through the entire process.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                to="#contact"
+                to="/contact"
                 className="inline-flex items-center justify-center px-6 py-3 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
               >
                 Contact Support

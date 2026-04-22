@@ -143,21 +143,6 @@ const BookingSuccess = () => {
                   <div className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full"></div>
                 </div>
 
-                {/* Quick Actions */}
-                <div className="flex flex-wrap justify-center gap-2 mt-4">
-                  <button className="inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
-                    <Share2 className="w-3 h-3" />
-                    Share
-                  </button>
-                  <button className="inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
-                    <Printer className="w-3 h-3" />
-                    Print
-                  </button>
-                  <button className="inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors">
-                    <Download className="w-3 h-3" />
-                    Save PDF
-                  </button>
-                </div>
               </div>
 
               {/* Next Steps Section */}

@@ -14,81 +14,74 @@ import {
   Shield,
   BookOpen,
   Clipboard,
+  ClipboardList,
   FileText as DefaultIcon
 } from 'lucide-react';
 
-// Icon mapping for different service categories
 const getServiceIcon = (service) => {
   const name = service.name?.toLowerCase() || '';
   const category = service.category?.toLowerCase() || '';
 
-  if (name.includes('vehicle') || name.includes('rto') || name.includes('driving') || name.includes('license')) {
+  // Category-level checks first (most reliable)
+  if (category === 'licenses') return Car;
+  if (category === 'registration-certificate') return ClipboardList;
+  if (category === 'gst') return Briefcase;
+  if (category === 'challan') return CreditCard;
+  if (category === 'passport') return FileText;
+  if (category === 'legal') return FileCheck;
+  if (category === 'insurance') return Shield;
+  if (category === 'pan-card') return CreditCard;
+
+  // Name-level fallback checks
+  if (name.includes('vehicle') || name.includes('driving') || name.includes('licence') || name.includes('license')) {
     return Car;
   }
-  if (name.includes('passport')) {
-    return FileText;
+  if (name.includes('registration') || name.includes('rc') || name.includes('hypothecation')) {
+    return ClipboardList;
   }
+  if (name.includes('passport')) return FileText;
   if (name.includes('certificate') || name.includes('birth') || name.includes('marriage') || name.includes('death')) {
     return Award;
   }
   if (name.includes('document') || name.includes('verification') || name.includes('attestation')) {
     return FolderOpen;
   }
-  if (name.includes('pan') || name.includes('aadhaar')) {
+  if (name.includes('pan') || name.includes('aadhaar') || name.includes('challan')) {
     return CreditCard;
   }
-  if (name.includes('property') || name.includes('land') || name.includes('mutatio')) {
-    return Home;
-  }
-  if (name.includes('identity') || name.includes('voter') || name.includes('ration') || name.includes('id')) {
-    return User;
-  }
-  if (name.includes('business') || name.includes('gst') || name.includes('company') || name.includes('registration')) {
-    return Briefcase;
-  }
-  if (name.includes('legal') || name.includes('affidavit') || name.includes('power of attorney') || name.includes('agreement')) {
-    return FileCheck;
-  }
-  if (name.includes('police') || name.includes('clearance') || name.includes('verification')) {
+  if (name.includes('insurance') || name.includes('health') || name.includes('life insurance')) {
     return Shield;
   }
-  if (name.includes('education') || name.includes('degree') || name.includes('marksheet') || name.includes('educational')) {
+  if (name.includes('property') || name.includes('land') || name.includes('rental')) {
+    return Home;
+  }
+  if (name.includes('identity') || name.includes('voter') || name.includes('ration')) {
+    return User;
+  }
+  if (name.includes('business') || name.includes('gst') || name.includes('company')) {
+    return Briefcase;
+  }
+  if (name.includes('legal') || name.includes('affidavit') || name.includes('power of attorney')) {
+    return FileCheck;
+  }
+  if (name.includes('police') || name.includes('clearance')) {
+    return Shield;
+  }
+  if (name.includes('education') || name.includes('degree') || name.includes('marksheet')) {
     return BookOpen;
   }
-  if (name.includes('income') || name.includes('caste') || name.includes('ews') || name.includes('obc')) {
+  if (name.includes('income') || name.includes('caste') || name.includes('ews')) {
     return Clipboard;
   }
-
-  // Fallback based on category
-  if (category.includes('rto')) return Car;
-  if (category.includes('passport')) return FileText;
-  if (category.includes('certificate')) return Award;
-  if (category.includes('document')) return FolderOpen;
-  if (category.includes('pan')) return CreditCard;
-  if (category.includes('property')) return Home;
-  if (category.includes('identity')) return User;
-  if (category.includes('business')) return Briefcase;
-  if (category.includes('legal')) return FileCheck;
-  if (category.includes('police')) return Shield;
-  if (category.includes('education')) return BookOpen;
-  if (category.includes('income')) return Clipboard;
 
   return DefaultIcon;
 };
 
-// Get service features/items for the bullet points
 const getServiceItems = (service) => {
-  // If service has features array, use them
   if (service.features && Array.isArray(service.features) && service.features.length > 0) {
     return service.features.slice(0, 4);
   }
-
-  // Default features based on category
-  const defaultItems = [
-
-  ];
-
-  return defaultItems;
+  return [];
 };
 
 const ServiceCard = ({ service }) => {
@@ -99,12 +92,11 @@ const ServiceCard = ({ service }) => {
     <div className="bg-white p-6 border-2 border-gray-200 rounded-lg hover:shadow-xl hover:border-gray-300 transition-all duration-300 group">
       <div className="flex items-start gap-4">
         {/* Icon Container */}
-        <div className="flex-shrink-0">
+        {/* <div className="flex-shrink-0">
           <div className="bg-gray-100 p-3 rounded-lg group-hover:bg-orange-500 transition-colors duration-300">
             <Icon className="w-6 h-6 text-gray-700 group-hover:text-white" />
           </div>
-        </div>
-
+        </div> */}
         {/* Content */}
         <div className="flex-1">
           {/* Category Badge */}
@@ -112,6 +104,7 @@ const ServiceCard = ({ service }) => {
             <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded mb-2">
               {service.category.replace(/-/g, ' ').toUpperCase()}
             </span>
+
           )}
 
           {/* Service Title */}
@@ -124,7 +117,7 @@ const ServiceCard = ({ service }) => {
             {service.description || 'Professional documentation service with expert assistance.'}
           </p>
 
-          {/* Service Features (Bullet Points) */}
+          {/* Service Features */}
           <ul className="space-y-1.5 mb-4">
             {serviceItems.map((item, index) => (
               <li key={index} className="text-sm text-gray-500 flex items-center gap-2">
@@ -134,11 +127,9 @@ const ServiceCard = ({ service }) => {
             ))}
           </ul>
 
-          {/* Processing Time and CTA */}
+          {/* CTA */}
           <div className="mt-4 pt-4 border-t border-gray-100">
             <div className="flex justify-between items-center">
-
-              {/* CTA Button */}
               <Link
                 to={`/service/${service._id || service.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="inline-flex items-center text-gray-700 hover:text-gray-900 font-medium text-sm underline group/link"

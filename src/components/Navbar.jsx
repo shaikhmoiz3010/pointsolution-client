@@ -26,10 +26,10 @@ const Navbar = () => {
       {/* Top Bar */}
 
       {/* Main Navigation */}
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-6 py-1">
         <div className="flex justify-between items-center">
           {/* Logo */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* <div className="bg-gray-700 text-white px-3 py-2 rounded-lg">
               <span className="font-bold text-xl">1P1S</span>
             </div> */}

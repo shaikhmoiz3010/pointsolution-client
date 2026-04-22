@@ -160,65 +160,7 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <th className="px-6 py-3">Booking ID</th>
-                <th className="px-6 py-3">Service</th>
-                <th className="px-6 py-3">Customer</th>
-                <th className="px-6 py-3">Status</th>
-                <th className="px-6 py-3">Date</th>
-                <th className="px-6 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {recentBookings.map((booking) => (
-                <tr key={booking._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-gray-900">{booking.bookingId}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{booking.serviceName}</div>
-                    <div className="text-xs text-gray-500">{booking.category}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      {booking.userDetails?.fullName || 'N/A'}
-                    </div>
-                    <div className="text-xs text-gray-500">{booking.userDetails?.email}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    {getStatusBadge(booking.status)}
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">
-                      {new Date(booking.createdAt).toLocaleDateString()}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {new Date(booking.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <Link
-                      to={`/admin/bookings/${booking._id}`}
-                      className="inline-flex items-center px-3 py-1 border border-gray-300 text-sm font-medium rounded-md text-gray-700 hover:bg-gray-50"
-                    >
-                      View
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-              {recentBookings.length === 0 && (
-                <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-gray-500">
-                    No recent bookings found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+
       </div>
 
       {/* Quick Stats */}

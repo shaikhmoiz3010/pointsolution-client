@@ -201,10 +201,10 @@ const BookingDetails = () => {
                 <span>•</span>
                 <span className="text-gray-800">Booking Details</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+              <h1 className="text-3xl sm:text-4xl font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
                 Booking Details
               </h1>
-              <div className="flex items-center gap-3 text-gray-600">
+              <div className="flex items-center gap-1 text-gray-600">
                 <Package className="w-5 h-5 text-blue-500" />
                 <span className="font-mono font-medium bg-gray-100 px-3 py-1 rounded-full">
                   {booking.bookingId || booking._id}
@@ -506,7 +506,7 @@ const BookingDetails = () => {
                 
                 <div className="p-4 space-y-4">
                   {/* Document Checklist */}
-                  <DocumentChecklist bookingId={booking._id || booking.bookingId} />
+                  {/* <DocumentChecklist bookingId={booking._id || booking.bookingId} /> */}
 
                   {/* Document Upload Form */}
                   {showDocumentUpload && (
@@ -517,15 +517,15 @@ const BookingDetails = () => {
                         className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl focus:border-blue-400 focus:ring-4 focus:ring-blue-100 outline-none transition-all mb-4"
                       >
                         <option value="">Select document type</option>
-                        <option value="aadhaar">📇 Aadhaar Card</option>
-                        <option value="pan">💳 PAN Card</option>
-                        <option value="passport">🛂 Passport</option>
-                        <option value="driving_licence">🚗 Driving Licence</option>
-                        <option value="birth_certificate">👶 Birth Certificate</option>
-                        <option value="marriage_certificate">💑 Marriage Certificate</option>
-                        <option value="address_proof">🏠 Address Proof</option>
-                        <option value="photograph">📸 Photograph</option>
-                        <option value="other">📄 Other Document</option>
+                        <option value="aadhaar">Aadhaar Card</option>
+                        <option value="pan">PAN Card</option>
+                        <option value="passport">Passport</option>
+                        <option value="driving_licence">Driving Licence</option>
+                        <option value="birth_certificate">Birth Certificate</option>
+                        <option value="marriage_certificate">Marriage Certificate</option>
+                        <option value="address_proof">Address Proof</option>
+                        <option value="photograph">Photograph</option>
+                        <option value="other">Other Document</option>
                       </select>
 
                       {uploadingType && (

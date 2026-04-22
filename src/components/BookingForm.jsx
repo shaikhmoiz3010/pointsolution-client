@@ -103,11 +103,7 @@ const BookingForm = ({ service, onSubmit, onCancel }) => {
                 <div className="flex-1">
                   <h4 className="font-bold text-gray-900 text-lg">Cash Payment</h4>
                   <p className="text-gray-600 text-sm mt-1">Pay in cash at our office after service completion</p>
-                  <div className="mt-3">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                      Recommended
-                    </span>
-                  </div>
+
                 </div>
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200">
@@ -146,12 +142,12 @@ const BookingForm = ({ service, onSubmit, onCancel }) => {
         {/* Summary */}
 
         {/* Buttons - Centered */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="flex flex-col sm:flex-row justify-center gap-1">
           <button
             type="button"
             onClick={onCancel}
             disabled={loading}
-            className="px-8 py-3 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors disabled:opacity-50 min-w-[140px]"
+            className="px-12 py-1 border-2 border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 font-medium transition-colors disabled:opacity-50 min-w-[140px]"
           >
             Cancel
           </button>
@@ -167,7 +163,7 @@ const BookingForm = ({ service, onSubmit, onCancel }) => {
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2">
-                <span>Confirm Booking</span>
+                <span>Confirm</span>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
