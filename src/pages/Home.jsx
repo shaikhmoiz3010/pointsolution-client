@@ -3,149 +3,136 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getCategories } from '../utils/api';
 import { useAuth } from '../contexts/AuthContext';
-import { 
-  Car, 
-  FileText, 
-  Award, 
-  FolderOpen, 
-  CreditCard,
-  Home as HomeIcon,
-  User,
-  Briefcase,
-  FileCheck,
-  Shield,
-  BookOpen,
-  Clipboard,
-  ArrowRight,
-  ClipboardList
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
-// Icon mapping for categories
-const categoryIcons = {
-  'licenses': Car,
-  'registration-certificate': ClipboardList,
-  'gst': Briefcase,
-  'legal': FileCheck,
-  'passport': FileText,
-  'challan': CreditCard,
-  'insurance': Shield,
-  'pan-card': CreditCard,
-  'certificate': Award,
-  'document': FolderOpen,
-  'property': HomeIcon,
-  'identity': User,
-  'police': Shield,
-  'education': BookOpen,
-  'income': Clipboard,
-  'other': FileText
+// High-quality Unsplash images for each category
+const categoryImages = {
+  'licenses':
+    'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=600&q=80',
+  'registration-certificate':
+    'https://images.unsplash.com/photo-1568667256531-9a5a9700b4d1?auto=format&fit=crop&w=600&q=80',
+  'gst':
+    'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80',
+  'legal':
+    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80',
+  'passport':
+    'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=600&q=80',
+  'challan':
+    'https://daily.jstor.org/wp-content/uploads/2016/02/iStock_000060131960_Medium.jpg',
+  'insurance':
+    'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=600&q=80',
+  'pan-card':
+    'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=600&q=80',
+  'certificate':
+    'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=600&q=80',
+  'document':
+    'https://images.unsplash.com/photo-1568667256531-9a5a9700b4d1?auto=format&fit=crop&w=600&q=80',
+  'property':
+    'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=600&q=80',
+  'identity':
+    'https://images.unsplash.com/photo-1607863680198-23d4b2565df0?auto=format&fit=crop&w=600&q=80',
+  'other':
+    'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80'
 };
 
 // Category display names and descriptions
 const categoryDetails = {
   'licenses': {
     name: 'Driving Licences',
-    description: 'Learner licence, permanent licence, renewal, duplicate, address change, and all driving licence related services.',
-    icon: Car
+    description: 'Learner, permanent, renewal, duplicate, address change, and international permit.'
   },
   'registration-certificate': {
     name: 'Registration Certificate',
-    description: 'New vehicle registration, RC transfer, hypothecation, NOC, fancy numbers, and all RC related services.',
-    icon: ClipboardList
+    description: 'New vehicle registration, ownership transfer, duplicate RC, and RC renewal.'
   },
   'gst': {
     name: 'GST & Tax Services',
-    description: 'GST registration, return filing, ITR filing, GST calculation, invoices, and legal aid for tax matters.',
-    icon: Briefcase
+    description: 'GST registration, return filing, ITR filing, calculation, invoices, and legal aid.'
   },
   'legal': {
     name: 'Legal Documents',
-    description: 'Marriage certificate, legal heir certificate, affidavits, and power of attorney.',
-    icon: FileCheck
+    description: 'Marriage certificate, legal heir certificate, affidavits, and power of attorney.'
   },
   'passport': {
     name: 'Passport Services',
-    description: 'New passport application, renewal, tatkal service, and police clearance.',
-    icon: FileText
+    description: 'New passport, renewal, tatkal service, and police clearance certificate.'
   },
   'challan': {
     name: 'Traffic Challan',
-    description: 'Pay traffic challans online, check pending fines, and dispute assistance.',
-    icon: CreditCard
+    description: 'Pay traffic challans online, check pending fines, and dispute assistance.'
   },
   'insurance': {
     name: 'Insurance Services',
-    description: 'Vehicle insurance, health insurance, life insurance, and insurance claim assistance.',
-    icon: Shield
+    description: 'Vehicle, health, and life insurance plans plus claim assistance.'
   },
   'pan-card': {
     name: 'PAN Card Services',
-    description: 'New PAN card application, corrections, duplicate PAN, and PAN-Aadhaar linking.',
-    icon: CreditCard
+    description: 'New PAN application, corrections, duplicate PAN, and PAN-Aadhaar linking.'
   },
   'certificate': {
     name: 'Certificates',
-    description: 'Birth, death, income, caste, and other government certificates.',
-    icon: Award
+    description: 'Birth, death, income, caste, and other government certificates.'
   },
   'document': {
     name: 'Document Services',
-    description: 'Document verification, attestation, and notary services.',
-    icon: FolderOpen
+    description: 'Document verification, attestation, and notary services.'
   },
   'property': {
     name: 'Property Services',
-    description: 'Property registration, mutation, and land record services.',
-    icon: HomeIcon
+    description: 'Property registration, mutation, and land record services.'
   },
   'identity': {
     name: 'Identity Documents',
-    description: 'Aadhaar, PAN card, voter ID, and ration card services.',
-    icon: User
-  },
-  'police': {
-    name: 'Police Services',
-    description: 'Police clearance certificate, character verification, and NOCs.',
-    icon: Shield
-  },
-  'education': {
-    name: 'Education Documents',
-    description: 'Degree verification, marksheet attestation, and education certificates.',
-    icon: BookOpen
-  },
-  'income': {
-    name: 'Income Certificates',
-    description: 'Income certificate, EWS certificate, and domicile certificates.',
-    icon: Clipboard
+    description: 'Aadhaar, voter ID, and ration card services.'
   },
   'other': {
     name: 'Other Services',
-    description: 'Insurance, visa assistance, and other documentation services.',
-    icon: FileText
+    description: 'Additional documentation and assistance services.'
   }
+};
+
+const getCategoryDetails = (categoryId) => {
+  return (
+    categoryDetails[categoryId] || {
+      name: categoryId
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, (l) => l.toUpperCase()),
+      description: 'Professional documentation services with expert assistance.'
+    }
+  );
+};
+
+const getCategoryImage = (categoryId) => {
+  return (
+    categoryImages[categoryId] ||
+    'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80'
+  );
 };
 
 const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user, isAuthenticated } = useAuth();
-  const [trackingId, setTrackingId] = useState('');
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const heroSlides = [
     {
-      image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600",
-      title: "Fast & Reliable Doorstep Services",
-      subtitle: "Expert assistance for RTO, Passport, and Legal Documents in Gurgaon."
+      image:
+        'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1600',
+      title: 'Fast & Reliable Doorstep Services',
+      subtitle: 'Expert assistance for RTO, Passport, and Legal Documents in Gurgaon.'
     },
     {
-      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600",
-      title: "Hassle-Free Documentation",
-      subtitle: "We handle all the paperwork while you focus on what matters most."
+      image:
+        'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1600',
+      title: 'Hassle-Free Documentation',
+      subtitle: 'We handle all the paperwork while you focus on what matters most.'
     },
     {
-      image: "https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1600",
-      title: "Expert Guidance at Every Step",
-      subtitle: "Our experienced team ensures 100% accurate and timely processing."
+      image:
+        'https://images.unsplash.com/photo-1554224154-26032ffc0d07?auto=format&fit=crop&w=1600',
+      title: 'Expert Guidance at Every Step',
+      subtitle: 'Our experienced team ensures 100% accurate and timely processing.'
     }
   ];
 
@@ -174,40 +161,24 @@ const Home = () => {
     }
   };
 
-  const handleTrackSubmit = (e) => {
-    e.preventDefault();
-    if (trackingId.trim()) {
-      window.location.href = `/track/${trackingId}`;
-    }
-  };
-
   const goToSlide = (index) => setCurrentSlide(index);
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  const nextSlide = () =>
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+  const prevSlide = () =>
+    setCurrentSlide(
+      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length
+    );
 
-  const getCategoryIcon = (categoryId) => categoryIcons[categoryId] || FileText;
-
-  const getCategoryDetails = (categoryId) => {
-    return categoryDetails[categoryId] || {
-      name: categoryId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      description: 'Professional documentation services with expert assistance.',
-      icon: FileText
-    };
-  };
-
-  // Featured categories to show first — licenses and registration-certificate replace rto
+  // Featured categories order
   const featuredOrder = [
-    'licenses',
-    'registration-certificate',
-    'gst',
-    'legal',
-    'passport',
-    'challan',
-    'insurance',
-    'pan-card',
-    'certificate',
-    'property',
-    'identity'
+    'licenses',               // A
+    'registration-certificate', // B
+    'passport',               // C
+    'legal',                  // D
+    'gst',                    // E
+    'challan',                // F
+    'insurance',              // G
+    'pan-card'                // H
   ];
 
   const sortedCategories = [...categories].sort((a, b) => {
@@ -232,7 +203,7 @@ const Home = () => {
 
   return (
     <div className="bg-gray-50 font-sans text-gray-900">
-      {/* Hero Section with Image Slider */}
+      {/* ── Hero Slider ── */}
       <section className="relative h-[600px] overflow-hidden bg-black">
         {heroSlides.map((slide, index) => (
           <div
@@ -254,10 +225,16 @@ const Home = () => {
                 {slide.subtitle}
               </p>
               <div className="flex space-x-4 animate-fade-in-up">
-                <a href="/services" className="bg-orange-600 hover:bg-orange-700 px-8 py-3 rounded-lg text-lg font-bold transition transform hover:scale-105">
+                <a
+                  href="/services"
+                  className="bg-orange-600 hover:bg-orange-700 px-8 py-3 rounded-lg text-lg font-bold transition transform hover:scale-105"
+                >
                   Our Services
                 </a>
-                <Link to="/contact" className="bg-white text-blue-900 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-bold transition transform hover:scale-105">
+                <Link
+                  to="/contact"
+                  className="bg-white text-blue-900 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-bold transition transform hover:scale-105"
+                >
                   Consult Now
                 </Link>
               </div>
@@ -284,70 +261,121 @@ const Home = () => {
               key={index}
               onClick={() => goToSlide(index)}
               className={`w-3 h-3 rounded-full transition-all ${
-                index === currentSlide ? 'bg-orange-600 w-8' : 'bg-white/50 hover:bg-white'
+                index === currentSlide
+                  ? 'bg-orange-600 w-8'
+                  : 'bg-white/50 hover:bg-white'
               }`}
             />
           ))}
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section id="categories" className="py-12 container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-extrabold text-gray-900 mb-4">What We Do</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg">
-            We simplify government documentation across multiple categories so you can focus on what matters most.
-          </p>
-        </div>
+      {/* ── Categories Section ── */}
+      <section id="categories" className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-14">
+            <span className="inline-block px-4 py-1.5 bg-orange-100 text-orange-600 text-sm font-semibold rounded-full mb-4 uppercase tracking-wide">
+              Our Services
+            </span>
+            <h2 className="text-4xl font-extrabold text-gray-900 mb-4">
+              What We Do
+            </h2>
+            <p className="text-gray-500 max-w-2xl mx-auto text-lg">
+              We simplify government documentation across multiple categories so
+              you can focus on what matters most.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {sortedCategories.map((category) => {
-            const details = getCategoryDetails(category.id);
-            const Icon = getCategoryIcon(category.id);
-            
-            return (
-              <Link 
-                key={category.id}
-                to={`/services/category/${category.id}`} 
-                className="service-card bg-white px-2 py-4 rounded-2xl shadow-sm hover:shadow-2xl transition border border-gray-100 block text-center"
-              >
-                <div className="service-icon w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl">
-                  <Icon className="w-9 h-9" />
-                </div>
-                <h3 className="text-2xl font-bold mb-4 text-gray-800">{details.name}</h3>
-                <div className="flex items-center justify-center gap-2 text-blue-600 font-bold">
-                  <span>Explore Service</span>
-                  <ArrowRight className="w-5 h-5" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
+          {/* Image Cards Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {sortedCategories.map((category) => {
+              const details = getCategoryDetails(category.id);
+              const image = getCategoryImage(category.id);
 
-        <div className="text-center mt-12">
-          <Link 
-            to="/services" 
-            className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-semibold transition-all duration-300 hover:shadow-lg"
-          >
-            View All Services
-            <i className="fas fa-arrow-right ml-2"></i>
-          </Link>
+              return (
+                <Link
+                  key={category.id}
+                  to={`/services/category/${category.id}`}
+                  className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block"
+                  style={{ minHeight: '220px' }}
+                >
+                  {/* Background Image */}
+                  <img
+                    src={image}
+                    alt={details.name}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    onError={(e) => {
+                      e.target.src =
+                        'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=600&q=80';
+                    }}
+                  />
+
+                  {/* Dark overlay — stronger at bottom */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10 group-hover:from-black/90 group-hover:via-black/50 transition-all duration-300" />
+
+                  {/* Content */}
+                  <div className="relative h-full flex flex-col justify-end p-5" style={{ minHeight: '220px' }}>
+                    {/* Service count badge */}
+                    {category.count > 0 && (
+                      <span className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                        {category.count} {category.count === 1 ? 'Service' : 'Services'}
+                      </span>
+                    )}
+
+                    <h3 className="text-white font-bold text-lg leading-tight mb-1">
+                      {details.name}
+                    </h3>
+                    <p className="text-gray-300 text-xs line-clamp-2 mb-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {details.description}
+                    </p>
+
+                    {/* Explore button */}
+                    <div className="flex items-center gap-1 text-orange-400 font-semibold text-sm">
+                      <span>Explore</span>
+                      <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-200" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* View All Button */}
+          <div className="text-center mt-12">
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all duration-300 hover:shadow-lg"
+            >
+              View All Services
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* ── CTA Section ── */}
       {!isAuthenticated && (
         <section className="py-20 bg-blue-50">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Ready to Get Started?</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Ready to Get Started?
+            </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              Join thousands of satisfied customers who trust us with their documentation needs.
+              Join thousands of satisfied customers who trust us with their
+              documentation needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition">
+              <Link
+                to="/register"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition"
+              >
                 Create Account
               </Link>
-              <Link to="/login" className="bg-white text-blue-900 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition">
+              <Link
+                to="/login"
+                className="bg-white text-blue-900 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition"
+              >
                 Login
               </Link>
             </div>
@@ -358,15 +386,23 @@ const Home = () => {
       {isAuthenticated && (
         <section className="py-20 bg-blue-50">
           <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Welcome back, {user?.fullName || 'User'}!</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Welcome back, {user?.fullName || 'User'}!
+            </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
               Continue tracking your applications or book new services.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/dashboard" className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition">
+              <Link
+                to="/dashboard"
+                className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-3 rounded-lg font-bold transition"
+              >
                 Go to Dashboard
               </Link>
-              <Link to="/services" className="bg-white text-blue-900 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition">
+              <Link
+                to="/services"
+                className="bg-white text-blue-900 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition"
+              >
                 Browse Services
               </Link>
             </div>

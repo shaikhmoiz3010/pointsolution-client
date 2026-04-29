@@ -3,8 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { useAuth } from './contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
 import Home from './pages/Home';
 import Services from './pages/Services';
 import ServiceDetails from './pages/ServiceDetails';
@@ -29,9 +31,6 @@ import AdminUsers from './components/admin/AdminUsers';
 import AdminServices from './components/admin/AdminServices';
 import AdminAnalytics from './components/admin/AdminAnalytics';
 import AdminDocuments from './components/admin/AdminDocuments';
-
-
-
 
 // Protected Route Component
 const ProtectedRoute = ({ children, adminOnly = false }) => {
@@ -60,12 +59,11 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
 };
 
 // Layout wrapper to conditionally show footer
-
 const AppLayout = ({ children }) => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
   const isDashboardRoute = location.pathname === '/dashboard';
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       {!isAdminRoute && !isDashboardRoute && <Navbar />}
@@ -81,6 +79,8 @@ function App() {
   return (
     <AuthProvider>
       <Router>
+        {/* ScrollToTop must be inside Router so it can access useLocation */}
+        <ScrollToTop />
         <AppLayout>
           <Routes>
             {/* Public Routes */}
