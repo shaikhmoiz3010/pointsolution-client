@@ -141,9 +141,7 @@ const ServiceCategory = () => {
         <div className="mb-12">
           <div className="text-center">
             <div className="inline-flex items-center gap-3 mb-4">
-              <div className="bg-gray-100 p-3 rounded-lg">
-                <CategoryIcon className="w-8 h-8 text-gray-700" />
-              </div>
+
               <div>
                 <div className="inline-block px-4 py-2 bg-gray-100 text-gray-700 rounded-full text-sm mb-2">
                   Category

@@ -316,12 +316,7 @@ const Home = () => {
 
                   {/* Content */}
                   <div className="relative h-full flex flex-col justify-end p-5" style={{ minHeight: '220px' }}>
-                    {/* Service count badge */}
-                    {category.count > 0 && (
-                      <span className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                        {category.count} {category.count === 1 ? 'Service' : 'Services'}
-                      </span>
-                    )}
+
 
                     <h3 className="text-white font-bold text-lg leading-tight mb-1">
                       {details.name}
