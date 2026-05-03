@@ -32,12 +32,12 @@ const Footer = () => {
         <div>
           <h5 className="font-bold mb-4 uppercase text-orange-500">Contact Person</h5>
           <p className="font-bold text-lg">Amit Soni</p>
-          <p className="text-gray-400">Mob: +91 83681 61577</p>
+          <p className="text-gray-400">Mob: +91 9988607609</p>
           <p className="text-gray-400">Email: info@1p1s.com</p>
         </div>
         <div>
           <h5 className="font-bold mb-4 uppercase text-orange-500">Location</h5>
-          <p className="text-gray-400">Adarsh Nagar, Gurgaon,<br />Haryana, 122001</p>
+          <p className="text-gray-400">316/1 Lajpat Nagar, Gurgaon,<br />Haryana, 122001</p>
         </div>
       </div>
       <div className="text-center pt-8 text-gray-500 text-sm">
@@ -46,7 +46,7 @@ const Footer = () => {
 
       {/* WhatsApp Floating Button */}
       <a
-        href="https://wa.me/918368161577?text=Hi%201P1S,%20I%20am%20looking%20for%20help%20with%20a%20service."
+        href="https://wa.me/919988607609?text=Hi%201P1S,%20I%20am%20looking%20for%20help%20with%20a%20service."
         className="fixed bottom-8 right-8 bg-green-500 text-white w-16 h-16 rounded-full shadow-2xl hover:bg-green-600 transition flex items-center justify-center text-3xl z-50 animate-bounce"
         target="_blank"
         rel="noopener noreferrer"
